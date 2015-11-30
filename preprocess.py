@@ -16,6 +16,7 @@ def categorize(data, colnum, missingvals):
 
 print("Loading dataset.")
 
+headers = []
 data = []
 ifile  = open('data/diabetic_data.csv', "r")
 reader = csv.reader(ifile)
@@ -23,6 +24,7 @@ i = 0
 for row in reader:
     if i == 0:
         i = 1
+        headers.append(row)
         continue
     data.append(row)
 
@@ -60,6 +62,8 @@ for i in range(22, len(data[0])):
 for i in range(10):
     print(data[i])
     print("\n")
+    
+data = headers + data
     
 # ref: http://stackoverflow.com/questions/7588934/deleting-columns-in-a-csv-with-python
 # save back to csv
