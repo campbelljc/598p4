@@ -61,7 +61,9 @@ categorize(data, 5, ['?']) # weight
 categorize(data, 10, ['?']) # payer code
 missing_indices = missing_indices.union(categorize(data, 11, ['?'])) # medical_specialty
 
-# 19, 20 -> diag_2, diag_3...
+categorize(data, 18, ['?'])
+categorize(data, 19, ['?'])
+categorize(data, 20, ['?'])
 
 for i in range(22, len(data[0])):
     categorize(data, i, [])
@@ -81,7 +83,7 @@ with open("data/processed.csv", "wb") as f:
     for r in data:
         wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
         
-with open("data/processing_without_missing.csv", "wb") as f:
+with open("data/processed_without_missing.csv", "wb") as f:
     wtr = csv.writer(f)
     for index, r in enumerate(data):
         if (index-1) not in missing_indices: # index+1 since we added the header row to the top.
