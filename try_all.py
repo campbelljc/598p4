@@ -42,10 +42,25 @@ for name, clf in zip(names, classifiers):
 '''
 
 results (f1-score)
+-> rows with missing medical speciality removed
 
 sgd         0.46
 knn         0.49
 lin-svm     0.49 (warning: precision/f-score are being set to 0.0 in labels with no predicted samples)
+rbf-svm     0.46
+dt          0.52
+rand-forest 0.46
+adaboost    0.54 ***
+n.bayes     0.03
+lda         0.51 (warning: variables are colinear)
+qda         0.02 (warning: variables are colinear)
+
+results (f1-score)
+-> rows with missing medical speciality removed, diagnoses grouped together by icd9 code category
+
+sgd         0.49 (warning: precision/f-score are being set to 0.0 in labels with no predicted samples)
+knn         0.51
+lin-svm     0.49 
 rbf-svm     0.46
 dt          0.52
 rand-forest 0.46
