@@ -26,17 +26,17 @@ data_train, data_test, target_train, target_test = common.load_train_data_and_sp
 
 def random_methods():
     names = ["SGD", "Nearest Neighbors", "linear-SVM","SVC","Decision Tree",
-             "Random Forest", "AdaBoost", "Naive Bayes", "LDA"]
+             "Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA"]
     classifiers = [
-        SGDClassifier(loss='hinge', penalty='l2', alpha=0.0005, n_iter=200, random_state=42, n_jobs=-1, average=True),
-        KNeighborsClassifier(10),
-        SVC(kernel="linear", C=0.025),
-        SVC(gamma=2, C=1),
-        DecisionTreeClassifier(max_depth=11),
-        RandomForestClassifier(max_depth=21, n_estimators=21, max_features=1),
-        AdaBoostClassifier(),
-        GaussianNB(),
-        LDA(),
+        SGDClassifier(loss='hinge', penalty='l2', alpha=0.0005, n_iter=200, random_state=42, n_jobs=-1, average=True), # 0.3959
+        KNeighborsClassifier(10), # 0.3950
+        SVC(kernel="linear", C=0.025), # 0.4172
+        SVC(gamma=2, C=1), # 0.3005
+        DecisionTreeClassifier(max_depth=11), # 0.4998 ***
+        RandomForestClassifier(max_depth=21, n_estimators=21, max_features=1), # 0.4469
+        AdaBoostClassifier(), # 0.2992
+        GaussianNB(), # 0.002
+        LDA(), # 0.3749
         QDA()
     ]
     # iterate over classifiers
@@ -47,7 +47,7 @@ def random_methods():
         score = clf.score(data_test, target_test)
         print(score)
         #print("Predict" % (metrics.classification_report(target_test,clf.predict(data_test))))
-random_methods()
+#random_methods()
 def Logistic_cross_vaildation():
     logistic = linear_model.LogisticRegression()
     #cross-validation for logistic regression with RBM
@@ -64,7 +64,7 @@ def Logistic_cross_vaildation():
     best_parameters = grid_search.best_estimator_.get_params()
     for param_name in sorted(parameters.keys()):
         print "\t%s: %r" % (param_name, best_parameters[param_name])
-#Logistic_cross_validation()
+Logistic_cross_validation()
 def SGD_cross_validation():
     SGD = linear_model.SGDClassifier(loss='hinge',penalty='l2',random_state=42,n_jobs=-1,epsilon=0.001)
     # cross-validaiotn for SGD classifier
