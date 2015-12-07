@@ -33,3 +33,10 @@ def load_train_data_and_split(testsize=0.3):
     input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
     print("Done loading")
     return input_train, input_test, output_train, output_test
+
+
+def load_test_train_as_two_class(test_size=0.3):
+    x_train, x_test, y_train, y_test = load_train_data_and_split(test_size)
+    y_train[y_train == 3] = 2
+    y_test[y_train == 3] = 2
+    return x_train, x_test, y_train, y_test
