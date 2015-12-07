@@ -1,7 +1,7 @@
 import csv
 from sklearn.cross_validation import train_test_split
 
-def load_train_data_and_split(testsize=0.3):
+def load_train_data_and_split(testsize=0.3, targetcol=-1):
     print("Loading dataset.")
 
     headers = []
@@ -25,8 +25,8 @@ def load_train_data_and_split(testsize=0.3):
     
     outputs = []
     for row in inputs:
-        outputs.append(row[-1])
-        del row[-1]
+        outputs.append(row[targetcol])
+        del row[targetcol]
         
     print("Num inputs: ", len(inputs))
     
