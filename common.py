@@ -27,6 +27,8 @@ def load_train_data_and_split(testsize=0.3):
     for row in inputs:
         outputs.append(row[-1])
         del row[-1]
+        
+    print("Num inputs: ", len(inputs))
     
     input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
     print("Done loading")

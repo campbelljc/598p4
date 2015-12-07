@@ -60,6 +60,7 @@ categorize(data, 4, []) # age
 categorize(data, 5, ['?']) # weight
 categorize(data, 10, ['?']) # payer code
 missing_indices = missing_indices.union(categorize(data, 11, ['?'])) # medical_specialty
+#categorize(data, 11, ['?']) # medical_specialty
 
 categorize(data, 18, ['?'])
 categorize(data, 19, ['?'])
