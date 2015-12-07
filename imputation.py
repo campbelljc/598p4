@@ -1,3 +1,4 @@
+import common
 import numpy as np
 import csv
 import numpy as np
@@ -19,14 +20,10 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.lda import LDA
 from sklearn.qda import QDA
-output = np.load('train_outputs.npy')
-input = np.load('train_inputs.npy')
-#test = np.load('test_inputs.npy')
-print (input.shape)
-print (output.shape)
-print input[0]
-print output[0]
-data_train, data_test, target_train, target_test = train_test_split(input, output, test_size=0.1, random_state=42)
+
+# col 6 is med. speciality
+data_train, data_test, target_train, target_test = common.load_train_data_and_split(targetcol=6)
+
 def random_methods():
     names = ["SGD", "Nearest Neighbors", "linear-SVM","SVC","Decision Tree",
              "Random Forest", "AdaBoost", "Naive Bayes", "LDA"]
@@ -151,33 +148,3 @@ def Logistic():
     plt.xlabel('Predicted Label')
     plt.savefig('confusion_matrix4.jpg')
 #Logistic()
-def loading_data():
-    # Load all training inputs to a python list
-    train_inputs = []
-    with open('training_input.csv', 'rb') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        next(reader, None)  # skip the header
-        for train_input in reader: 
-            train_input_no_id = []
-            for dimension in train_input[0:]:
-                train_input_no_id.append(float(dimension))
-            train_inputs.append(np.asarray(train_input_no_id)) # Load each sample as a numpy array, which is appened to the python list
-
-    # Load all training ouputs to a python list
-    train_outputs = []
-    with open('training_output.csv', 'rb') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        next(reader, None)  # skip the header
-        for train_output in reader:  
-            train_output_no_id = int(train_output[0])
-            train_outputs.append(train_output_no_id)
-
-    # Convert python lists to numpy arrays
-    train_inputs_np = np.asarray(train_inputs)
-    train_outputs_np = np.asarray(train_outputs)
-
-    # Save as numpy array files
-    np.save('train_inputs', train_inputs_np)
-    np.save('train_outputs', train_outputs_np)
-    #Run this first to get the numpy file and then can be used very easily
-#loading_data()
