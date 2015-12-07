@@ -1,5 +1,6 @@
 import csv
 from sklearn.cross_validation import train_test_split
+import numpy as np
 
 def load_train_data_and_split(testsize=0.3, targetcol=-1):
     print("Loading dataset.")
@@ -33,3 +34,15 @@ def load_train_data_and_split(testsize=0.3, targetcol=-1):
     input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
     print("Done loading")
     return input_train, input_test, output_train, output_test
+
+
+def load_test_train_as_two_class(test_size=0.3):
+    x_train, x_test, y_train, y_test = load_train_data_and_split(test_size)
+    x_train = np.array(x_train)
+    x_test = np.array(x_test)
+    y_train = np.array(y_train)
+    y_test = np.array(y_test)
+
+    y_train[y_train == 3] = 2
+    y_test[y_test == 3] = 2
+    return x_train, x_test, y_train, y_test
