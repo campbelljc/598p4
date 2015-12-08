@@ -23,20 +23,21 @@ from sklearn.qda import QDA
 
 # col 6 is med. speciality
 data_train, data_test, target_train, target_test = common.load_train_data_and_split(targetcol=6)
+missing_data_rows = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)
 
 def random_methods():
     names = ["SGD", "Nearest Neighbors", "linear-SVM","SVC","Decision Tree",
-             "Random Forest", "AdaBoost", "Naive Bayes", "LDA"]
+             "Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA"]
     classifiers = [
-        SGDClassifier(loss='hinge', penalty='l2', alpha=0.0005, n_iter=200, random_state=42, n_jobs=-1, average=True),
-        KNeighborsClassifier(10),
-        SVC(kernel="linear", C=0.025),
-        SVC(gamma=2, C=1),
-        DecisionTreeClassifier(max_depth=11),
-        RandomForestClassifier(max_depth=21, n_estimators=21, max_features=1),
-        AdaBoostClassifier(),
-        GaussianNB(),
-        LDA(),
+        SGDClassifier(loss='hinge', penalty='l2', alpha=0.0005, n_iter=200, random_state=42, n_jobs=-1, average=True), # 0.3959
+        KNeighborsClassifier(10), # 0.3950
+        SVC(kernel="linear", C=0.025), # 0.4172
+        SVC(gamma=2, C=1), # 0.3005
+        DecisionTreeClassifier(max_depth=11), # 0.4998 ***
+        RandomForestClassifier(max_depth=21, n_estimators=21, max_features=1), # 0.4469
+        AdaBoostClassifier(), # 0.2992
+        GaussianNB(), # 0.002
+        LDA(), # 0.3749
         QDA()
     ]
     # iterate over classifiers
@@ -47,7 +48,15 @@ def random_methods():
         score = clf.score(data_test, target_test)
         print(score)
         #print("Predict" % (metrics.classification_report(target_test,clf.predict(data_test))))
-random_methods()
+#random_methods()
+
+def dt_classifier():
+    dt_clf = DecisionTreeClassifier(max_depth=11)
+    dt_clf.fit(data_train, target_train)
+    preds = list(dt_clf.predict(missing_data_rows))
+    print [[x,preds.count(x)] for x in set(preds)]
+    return preds
+    
 def Logistic_cross_vaildation():
     logistic = linear_model.LogisticRegression()
     #cross-validation for logistic regression with RBM
