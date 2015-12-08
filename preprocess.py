@@ -10,7 +10,7 @@ def categorize(data, colnum, missingvals, ranges=[]):
             categories.add(row[colnum])
     catlist = list(categories)
     catlist.sort()
-    print(', '.join(['%i: %s' % (n, catlist[n]) for n in xrange(len(catlist))]), "(with missing vals:", missingvals, ")")
+#    print(', '.join(['%i: %s' % (n, catlist[n]) for n in xrange(len(catlist))]), "(with missing vals:", missingvals, ")")
     
     missing_indices = []
     for index, row in enumerate(data):
@@ -116,3 +116,22 @@ with open("data/processed_without_missing.csv", "wb") as f:
     for index, r in enumerate(data):
         if (index-1) not in missing_indices: # index+1 since we added the header row to the top.
             wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+        
+with open("data/processed_only_missing.csv", "wb") as f:
+    wtr = csv.writer(f)
+    for index, r in enumerate(data):
+        if (index-1) in missing_indices or index is 0: # index+1 since we added the header row to the top.
+            wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+            
+print("Filling in missing medical speciality values...")
+import imputation
+predictions = imputation.dt_classifier()
+#print(predictions)
+with open("data/processed_missing_filled_in.csv", "wb") as f:
+    wtr = csv.writer(f)
+    count = 0
+    for index, r in enumerate(data):
+        if (index-1) in missing_indices: # index+1 since we added the header row to the top.
+            r[11] = predictions[count]
+            count = count+1
+        wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))

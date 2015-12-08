@@ -23,6 +23,7 @@ from sklearn.qda import QDA
 
 # col 6 is med. speciality
 data_train, data_test, target_train, target_test = common.load_train_data_and_split(targetcol=6)
+missing_data_rows = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)
 
 def random_methods():
     names = ["SGD", "Nearest Neighbors", "linear-SVM","SVC","Decision Tree",
@@ -48,6 +49,14 @@ def random_methods():
         print(score)
         #print("Predict" % (metrics.classification_report(target_test,clf.predict(data_test))))
 #random_methods()
+
+def dt_classifier():
+    dt_clf = DecisionTreeClassifier(max_depth=11)
+    dt_clf.fit(data_train, target_train)
+    preds = list(dt_clf.predict(missing_data_rows))
+    print [[x,preds.count(x)] for x in set(preds)]
+    return preds
+    
 def Logistic_cross_vaildation():
     logistic = linear_model.LogisticRegression()
     #cross-validation for logistic regression with RBM
@@ -64,7 +73,7 @@ def Logistic_cross_vaildation():
     best_parameters = grid_search.best_estimator_.get_params()
     for param_name in sorted(parameters.keys()):
         print "\t%s: %r" % (param_name, best_parameters[param_name])
-Logistic_cross_validation()
+#Logistic_cross_validation()
 def SGD_cross_validation():
     SGD = linear_model.SGDClassifier(loss='hinge',penalty='l2',random_state=42,n_jobs=-1,epsilon=0.001)
     # cross-validaiotn for SGD classifier
