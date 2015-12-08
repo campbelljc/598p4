@@ -26,7 +26,8 @@ params = {
     # 'alpha': [.001]
 }
 
-data_train, data_test, target_train, target_test = common.load_test_train_as_two_class()
+data_train, data_test, target_train, target_test = common.load_test_train_as_two_class(f='data/processed_missing_filled_in.csv')
+#data_train, data_test, target_train, target_test = common.load_test_train_as_two_class(f='data/processed_without_missing.csv')
 sgd = SGDClassifier()
 grid = GridSearchCV(sgd, params, cv=10)
 grid.fit(data_train, target_train)
@@ -37,6 +38,7 @@ print(grid.best_score_)
 
 predictions = grid.predict(data_test)
 print(metrics.precision_recall_fscore_support(target_test, predictions))
+print(metrics.classification_report(target_test, predictions))
 
 # for score in grid.grid_scores_:
 #     print(score.parameters, \
