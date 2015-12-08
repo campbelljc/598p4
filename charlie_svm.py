@@ -5,6 +5,7 @@ import common
 from sklearn.linear_model import SGDClassifier
 from sklearn.grid_search import GridSearchCV
 from sklearn import metrics
+import numpy as np
 
 # learners = {
 #     ('sgd', SGDClassifier()): {
@@ -26,8 +27,9 @@ params = {
     # 'alpha': [.001]
 }
 
-data_train, data_test, target_train, target_test = common.load_test_train_as_two_class(f='data/processed_missing_filled_in.csv')
+#data_train, data_test, target_train, target_test = common.load_test_train_as_two_class(f='data/processed_missing_filled_in.csv')
 #data_train, data_test, target_train, target_test = common.load_test_train_as_two_class(f='data/processed_without_missing.csv')
+data_train, data_test, target_train, target_test = common.load_train_data_and_split()
 sgd = SGDClassifier()
 grid = GridSearchCV(sgd, params, cv=10)
 grid.fit(data_train, target_train)
@@ -37,6 +39,7 @@ print(grid.best_params_)
 print(grid.best_score_)
 
 predictions = grid.predict(data_test)
+np.save('data/predictions', predictions)
 print(metrics.precision_recall_fscore_support(target_test, predictions))
 print(metrics.classification_report(target_test, predictions))
 
