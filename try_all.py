@@ -27,7 +27,7 @@ classifiers = [
     QDA()
 ]
 
-X_train, X_test, y_train, y_test = common.load_train_data_and_split()
+X_train, X_test, y_train, y_test = common.load_train_data_and_split(file='data/processed.csv')
 
 # iterate over classifiers
 for name, clf in zip(names, classifiers):
@@ -67,6 +67,36 @@ rand-forest 0.46
 adaboost    0.54 ***
 n.bayes     0.03
 lda         0.51 (warning: variables are colinear)
+qda         0.02 (warning: variables are colinear)
+
+
+results (f1-score)
+-> rows with missing medical speciality using imputed data, diagnoses grouped together by icd9 code category
+
+sgd         0.48 (warning: precision/f-score are being set to 0.0 in labels with no predicted samples)
+knn         0.49
+lin-svm     0.48
+rbf-svm     0.45
+dt          0.51
+rand-forest 0.45
+adaboost    0.53 ***
+n.bayes     0.03
+lda         0.50 (warning: variables are colinear)
+qda         0.02 (warning: variables are colinear)
+
+
+results (f1-score)
+-> rows with missing medical speciality using value of 0, diagnoses grouped together by icd9 code category
+
+sgd         0.48 (warning: precision/f-score are being set to 0.0 in labels with no predicted samples)
+knn         0.49
+lin-svm     0.48
+rbf-svm     0.45
+dt          0.51
+rand-forest 0.45
+adaboost    0.53 ***
+n.bayes     0.03
+lda         0.50 (warning: variables are colinear)
 qda         0.02 (warning: variables are colinear)
 
 '''
