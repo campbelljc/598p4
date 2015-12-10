@@ -29,7 +29,7 @@ params = {
 
 data_train, data_test, target_train, target_test = common.load_train_data_and_split()
 sgd = SGDClassifier()
-grid = GridSearchCV(sgd, params, cv=10)
+grid = GridSearchCV(sgd, params, cv=10, scoring='f1')
 grid.fit(data_train, target_train)
 
 print(grid.best_estimator_)
@@ -38,7 +38,7 @@ print(grid.best_score_)
 
 predictions = grid.predict(data_test)
 np.save('data/predictions', predictions)
-print(metrics.precision_recall_fscore_support(target_test, predictions))
+print(metrics.classification_report(target_test, predictions))
 
 # for score in grid.grid_scores_:
 #     print(score.parameters, \
