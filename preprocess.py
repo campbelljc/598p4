@@ -38,8 +38,37 @@ def categorize(data, colnum, missingvals, ranges=[]):
                 row[colnum] = catlist.index(row[colnum])+1
     return missing_indices
 
-def binarize(data, colnum):
-    return 0
+def binarize(data, colnum, missingvals):
+    # return a list of arrays, with one column for each different value in the specified colnum of input data array
+    # also return the headers of this array.
+    
+    col_vals = set()
+    for row in data: # get all the different values in this column.
+        if row[colnum] not in missingvals: # don't record missing vals.
+            col_vals.add(row[colnum])
+    
+    new_data_cols = []
+    for i, row in enumerate(data):
+        column_to_binary_vals = []
+        for cval in col_vals:
+            if row[colnum] == cval:
+                column_to_binary_vals.append(1)
+            else:
+                column_to_binary_vals.append(0)
+        new_data_cols.append(column_to_binary_vals) # one row for each data item
+
+    headers = []
+    for cval in col_vals:
+        name = "is" + cval
+        headers.append(name)
+    
+    return headers, new_data_cols
+
+def add_cols(data, headers, new_headers, new_data_cols):    
+    headers[0] = headers[0] + list(new_headers)
+    for i in range(len(data)):
+        data[i] = data[i] + new_data_cols[i]
+    return headers, data
 
 def load_dataset():
     headers = []
@@ -80,7 +109,19 @@ def main():
     missing_indices = set() # will store the indices for the rows that have missing data
 
     # Turn all indicated features into categorical values from 1 to n. 0 is reserved for missing value.
-    categorize(data, 2, ['?']) # race
+    
+   # categorize(data, 2, ['?']) # race
+    
+    headers_to_add = []
+    cols_to_add = [[] for x in xrange(len(data))]
+    del_cols = [0, 1, 3, 5, 10] # remove patient id, encounter id, gender, weight, payer code.
+    
+    new_headers, new_data_cols = binarize(data, 2, ['?'])
+    headers_to_add += new_headers
+    for i in range(len(new_data_cols)):
+        cols_to_add[i] += new_data_cols[i]
+    del_cols.append(2)
+    
     #categorize(data, 3, ['Unknown/Invalid']) # gender
     categorize(data, 4, []) # age
     #categorize(data, 5, ['?']) # weight
@@ -100,6 +141,16 @@ def main():
     for i in range(22, len(data[0])):
         categorize(data, i, [])
 
+    del_cols.sort()
+    for colnum in reversed(del_cols):
+    #    print("Headers length is ", len(headers[0]), " and we are popping ", colnum)
+        headers[0].pop(colnum)
+        for row in data:
+            row.pop(colnum)
+            #del row[colnum]
+            
+    headers, data = add_cols(data, headers, new_headers, new_data_cols)
+
     data = headers + data
 
     # ref: http://stackoverflow.com/questions/7588934/deleting-columns-in-a-csv-with-python
@@ -110,21 +161,24 @@ def main():
     with open("data/processed.csv", "wb") as f:
         wtr = csv.writer(f)
         for r in data:
-            wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
-        
+            wtr.writerow(r)
+#            wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+    
     # this saves dataset except for entries where there is missing data in the missing speciality feature.
     with open("data/processed_without_missing.csv", "wb") as f:
         wtr = csv.writer(f)
         for index, r in enumerate(data):
             if (index-1) not in missing_indices: # index+1 since we added the header row to the top.
-                wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
-        
+                wtr.writerow(r)
+              #  wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+    
     with open("data/processed_only_missing.csv", "wb") as f:
         wtr = csv.writer(f)
         for index, r in enumerate(data):
             if (index-1) in missing_indices or index is 0: # index+1 since we added the header row to the top.
-                wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
-            
+                wtr.writerow(r)
+               # wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+        
     print("Filling in missing medical speciality values...")
     import imputation
     predictions = imputation.dt_classifier()
@@ -135,7 +189,8 @@ def main():
             if (index-1) in missing_indices: # index+1 since we added the header row to the top.
                 r[11] = predictions[count]
                 count = count+1
-            wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
+            wtr.writerow(r)
+       #     wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
             
 if __name__ == '__main__':
     main()
