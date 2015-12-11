@@ -59,7 +59,7 @@ def binarize(data, colnum, missingvals):
 
     headers = []
     for cval in col_vals:
-        name = "is" + cval
+        name = "is" + str(cval)
         headers.append(name)
     
     return headers, new_data_cols
@@ -118,8 +118,7 @@ def main():
     
     new_headers, new_data_cols = binarize(data, 2, ['?'])
     headers_to_add += new_headers
-    for i in range(len(new_data_cols)):
-        cols_to_add[i] += new_data_cols[i]
+    cols_to_add += new_data_cols
     del_cols.append(2)
     
     #categorize(data, 3, ['Unknown/Invalid']) # gender
@@ -130,7 +129,7 @@ def main():
     # deal with medical speciality (feature 11)
     missing_indices = missing_indices.union(categorize(data, 11, ['?'])) # remove data with missing values
     #categorize(data, 11, ['?']) # include all data
-
+    
     # feats 18, 19, 20 -> diagnosis 1, 2, 3.
     # To not group various diagnoses together corresponding to ICD9 code category, then remove the last list argument.
     # ICD9 code category ref : https://en.wikipedia.org/wiki/List_of_ICD-9_codes
@@ -140,6 +139,14 @@ def main():
 
     for i in range(22, len(data[0])):
         categorize(data, i, [])
+        
+    # remove last column and re-add later.
+    outputs = []
+    output_header = headers[0][-1]
+    for row in data:
+        outputs.append(row[-1])
+        del row[-1]
+    del headers[0][-1]
 
     del_cols.sort()
     for colnum in reversed(del_cols):
@@ -151,7 +158,13 @@ def main():
             
     headers, data = add_cols(data, headers, new_headers, new_data_cols)
 
+    headers[0].append(output_header)
     data = headers + data
+    
+    for i in range(len(data)):
+        if i is 0:
+            continue
+        data[i].append(outputs[i-1])
 
     # ref: http://stackoverflow.com/questions/7588934/deleting-columns-in-a-csv-with-python
     # save back to csv
@@ -182,13 +195,57 @@ def main():
     print("Filling in missing medical speciality values...")
     import imputation
     predictions = imputation.dt_classifier()
+    
+    #find med specialty col.
+    medcol = -1
+    for i, h in enumerate(headers[0]):
+        if 'medical_specialty' in h:
+            medcol = i
+            break
+    print(medcol)
+    
+    predcount = 0
+    for index in range(len(data)):
+        if (index-1) in missing_indices:
+            data[index][medcol] = predictions[predcount]
+            predcount += 1
+            
+    data.pop(0)
+    new_headers, new_data_cols = binarize(data, medcol, ['?'])
+    headers_to_add = new_headers
+    cols_to_add = new_data_cols
+    
+    headers[0].pop(medcol)
+    
+    # remove last column and re-add later.
+    outputs = []
+    output_header = headers[0][-1]
+    for row in data:
+        outputs.append(row[-1])
+        del row[-1]
+    del headers[0][-1]
+    
+    for row in data:
+        row.pop(medcol)
+    headers, data = add_cols(data, headers, new_headers, new_data_cols)
+    
+    
+
+    headers[0].append(output_header)
+    data = headers + data
+    
+    for i in range(len(data)):
+        if i is 0:
+            continue
+        data[i].append(outputs[i-1])
+    
     with open("data/processed_missing_filled_in.csv", "wb") as f:
         wtr = csv.writer(f)
-        count = 0
+   #     count = 0
         for index, r in enumerate(data):
-            if (index-1) in missing_indices: # index+1 since we added the header row to the top.
-                r[11] = predictions[count]
-                count = count+1
+    #        if (index-1) in missing_indices: # index+1 since we added the header row to the top.
+     #           r[11] = predictions[count]
+      #          count = count+1
             wtr.writerow(r)
        #     wtr.writerow((r[2], r[4], r[6], r[7], r[8], r[9], r[11], r[12], r[13], r[14], r[15], r[16], r[17], r[18], r[19], r[20], r[21], r[22], r[23], r[24], r[25], r[26], r[27], r[28], r[29], r[30], r[31], r[32], r[33], r[34], r[35], r[36], r[37], r[38], r[39], r[40], r[41], r[42], r[43], r[44], r[45], r[46], r[47], r[48], r[49]))
             

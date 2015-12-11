@@ -56,7 +56,7 @@ def dt_classifier():
     missing_data_rows, op = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)
     
     preds = list(dt_clf.predict(missing_data_rows))
-    print [[x,preds.count(x)] for x in set(preds)]
+#    print [[x,preds.count(x)] for x in set(preds)]
     return preds
     
 def Logistic_cross_vaildation():

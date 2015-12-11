@@ -123,6 +123,8 @@ def main():
     target_train = np.array(target_train)
     target_train = target_train.astype(np.int32)
     
+    print(target_train)
+    
  #   data_train, target_train = smote.smote_data(data_train, target_train)
     
     classify(data_train, target_train, data_test, target_test)
