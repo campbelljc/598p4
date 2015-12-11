@@ -52,11 +52,14 @@ def load_train_data_and_split(testsize=0.3, targetcol=-1, file='data/processed_w
     print("Num inputs: ", len(inputs))
     print("Done loading")
     
+    for i in range(len(outputs)):
+        outputs[i] -= 1
+        
     if split:
         input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
         return input_train, input_test, output_train, output_test
     else:
-        return inputs
+        return inputs, outputs
 
 def load_test_train_as_two_class(ts=0.3, f='data/processed_missing_filled_in.csv'):
     x_train, x_test, y_train, y_test = load_train_data_and_split(testsize=ts, file=f)

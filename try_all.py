@@ -1,5 +1,7 @@
 from __future__ import division
 import common
+import smote
+import numpy as np
 from sklearn.linear_model import SGDClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
@@ -12,22 +14,28 @@ from sklearn import metrics
 
 # ref : http://scikit-learn.org/stable/auto_examples/plot_classifier_comparison.html
 
-names = ["SGD", "Nearest Neighbors", "Linear SVM", "RBF SVM", "Decision Tree",
-         "Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA"]
+names = ["SGD", "Nearest Neighbors", # "Linear SVM", "RBF SVM", 
+         "Decision Tree", "Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA"]
 classifiers = [
     SGDClassifier(loss='hinge', penalty='l2', alpha=0.005, n_iter=10, random_state=42, n_jobs=-1, average=True),
     KNeighborsClassifier(3),
-    SVC(kernel="linear", C=0.025),
-    SVC(gamma=2, C=1),
-    DecisionTreeClassifier(max_depth=5),
-    RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
+ #   SVC(kernel="linear", C=0.025),
+ #   SVC(gamma=2, C=1),
+    DecisionTreeClassifier(max_depth=15),
+    RandomForestClassifier(max_depth=15, n_estimators=10, max_features=1),
     AdaBoostClassifier(),
     GaussianNB(),
     LDA(),
     QDA()
 ]
 
-X_train, X_test, y_train, y_test = common.load_train_data_and_split(file='data/processed.csv')
+X_train, X_test, y_train, y_test = common.load_train_data_and_split(file='data/processed_missing_filled_in.csv')
+
+X_train = np.asarray(X_train)
+y_train = np.array(y_train)
+y_train = y_train.astype(np.int32)
+
+X_train, y_train = smote.smote_data(X_train, y_train)
 
 # iterate over classifiers
 for name, clf in zip(names, classifiers):
