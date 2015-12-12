@@ -50,7 +50,7 @@ def random_methods():
 #random_methods()
 
 def dt_classifier():
-    dt_clf = DecisionTreeClassifier(max_depth=11)
+    dt_clf = DecisionTreeClassifier(max_depth=25)
     dt_clf.fit(data_train, target_train)
     
     missing_data_rows, op = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)

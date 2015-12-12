@@ -55,19 +55,21 @@ def load_train_data_and_split(testsize=0.3, targetcol=-1, file='data/processed_w
     
     for i in range(len(outputs)):
         outputs[i] -= 1
-        
-    if num_classes is 2: # convert all outputs of 3 to outputs of 2.
-        outputs[outputs == 3] = 2
-        
+                
     if split:
         input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
+
         input_train = np.array(input_train)
         input_test = np.array(input_test)
         output_train = np.array(output_train)
         output_train = output_train.astype(np.int32)
         output_test = np.array(output_test)
         output_test = output_test.astype(np.int32)
-        
+
+        if num_classes == 2: # convert all outputs of 3 to outputs of 2.
+            output_train[output_train == 2] = 1
+            output_test[output_test == 2] = 1
+
         if smote:
             input_train, output_train = sm.smote_data(input_train, output_train)
         

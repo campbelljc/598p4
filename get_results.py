@@ -19,7 +19,7 @@ from lasagne.updates import nesterov_momentum
 def save_results(real, predicted, algdesc, algname):
     conf_matrix = confusion_matrix(real, predicted)
     
-    with open('results/'+algname+'_results.txt', "w") as f:
+    with open('results/'+algdesc+'_results.txt', "w") as f:
         f.write(classification_report(real, predicted))
         f.write(np.array_str(conf_matrix))
     
@@ -28,7 +28,7 @@ def save_results(real, predicted, algdesc, algname):
     plt.colorbar()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.savefig('figures/confmatrix_' + algname + '.png')
+    plt.savefig('figures/confmatrix_' + algdesc + '.png')
     plt.close()
 
 def main():
@@ -66,14 +66,18 @@ def main():
                         print(algdesc)
                         input_train, input_test, output_train, output_test = common.load_train_data_and_split(file=dat, num_samples_per_class=numspl, num_classes=numcls, smote=os)
                         
-                        if algname is "Neural Net":
+                        if algname is "NNet":
                             alg = NeuralNet(layers=[('input', InputLayer), ('dense0', DenseLayer), ('dropout0', DropoutLayer), ('dense1', DenseLayer), ('dropout1', DropoutLayer), ('output', DenseLayer)], input_shape=(None, input_train.shape[1]), dense0_num_units=300, dropout0_p=0.075, dropout1_p=0.1, dense1_num_units=750, output_num_units=numcls, output_nonlinearity=softmax, update=nesterov_momentum, update_learning_rate=0.001, update_momentum=0.99, eval_size=0.33, verbose=1, max_epochs=15)
                         
-                        predictions_train = alg.fit(input_train, output_train).predict(input_train)
+                        model = alg.fit(input_train, output_train)
+                        
+                        print("TRAIN ", algdesc)
+                        predictions_train = model.predict(input_train)
                         save_results(output_train, predictions_train, algdesc+"_train", algname)
                         
-                        predictions_test = alg.fit(input_train, output_train).predict(input_test)
-                        save_results(output_test, predictions_train, algdesc+"_test", algname)
+                        print("TEST ", algdesc)
+                        predictions_test = model.predict(input_test)
+                        save_results(output_test, predictions_test, algdesc+"_test", algname)
     
 if __name__ == '__main__':
     main()

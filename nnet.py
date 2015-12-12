@@ -125,7 +125,7 @@ def main():
     
     print(target_train)
     
- #   data_train, target_train = smote.smote_data(data_train, target_train)
+    data_train, target_train = smote.smote_data(data_train, target_train)
     
     classify(data_train, target_train, data_test, target_test)
  #   lasagne_grid_search(data_train, target_train)
