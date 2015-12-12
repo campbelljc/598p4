@@ -1,4 +1,5 @@
 import common
+import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
@@ -20,7 +21,7 @@ def save_results(real, predicted, algdesc, algname):
     
     with open('results/'+algname+'_results.txt', "w") as f:
         f.write(classification_report(real, predicted))
-        f.write(conf_matrix)
+        f.write(np.array_str(conf_matrix))
     
     plt.matshow(conf_matrix)
     plt.title("Confusion matrix (" + algname + ")")
@@ -28,21 +29,22 @@ def save_results(real, predicted, algdesc, algname):
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig('figures/confmatrix_' + algname + '.png')
+    plt.close()
 
 def main():
     datafiles = ['data/processed_missing_filled_in.csv', 'data/processed_without_missing.csv', 'data/processed.csv']
-    datanames = ['missingdata_imputed', 'missingdata_deleted', 'missingdata_zeros']
+    datanames = ['md=imputed', 'md=deleted', 'md=0s']
 
     num_samples_per_class = [-1, 6000]
-    nsnames = ['numsmpl_all', 'numsmpl_6000']
+    nsnames = ['ns=all', 'ns=6000']
     
     num_classes = [2, 3]
-    cnames = ['numcls_2', 'numcls_3']
+    cnames = ['nc=2', 'nc=3']
     
     oversample = [True, False]
-    osnames = ["os_true", "os_false"]
+    osnames = ["os=t", "os=f"]
     
-    algnames = ["Nearest Neighbors", "Decision Tree", "Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA", "SGD", "Neural Net"]
+    algnames = ["NN", "DT", "RandomForest", "AdaBoost", "GaussianNB", "LDA", "QDA", "SGD", "NNet"]
     algs = [
         KNeighborsClassifier(5),
         DecisionTreeClassifier(max_depth=25),
@@ -67,8 +69,11 @@ def main():
                         if algname is "Neural Net":
                             alg = NeuralNet(layers=[('input', InputLayer), ('dense0', DenseLayer), ('dropout0', DropoutLayer), ('dense1', DenseLayer), ('dropout1', DropoutLayer), ('output', DenseLayer)], input_shape=(None, input_train.shape[1]), dense0_num_units=300, dropout0_p=0.075, dropout1_p=0.1, dense1_num_units=750, output_num_units=numcls, output_nonlinearity=softmax, update=nesterov_momentum, update_learning_rate=0.001, update_momentum=0.99, eval_size=0.33, verbose=1, max_epochs=15)
                         
-                        predictions = alg.fit(input_train, output_train).predict(input_test)
-                        save_results(output_test, predictions, algdesc, algname)
+                        predictions_train = alg.fit(input_train, output_train).predict(input_train)
+                        save_results(output_train, predictions_train, algdesc+"_train", algname)
+                        
+                        predictions_test = alg.fit(input_train, output_train).predict(input_test)
+                        save_results(output_test, predictions_train, algdesc+"_test", algname)
     
 if __name__ == '__main__':
     main()
