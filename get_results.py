@@ -35,14 +35,14 @@ def main():
     datafiles = ['data/processed_missing_filled_in.csv', 'data/processed_without_missing.csv', 'data/processed.csv']
     datanames = ['md=imputed', 'md=deleted', 'md=0s']
 
-    num_samples_per_class = [-1, 6000]
-    nsnames = ['ns=all', 'ns=6000']
+    num_samples_per_class = [-1] #, 6000]
+    nsnames = ['ns=all'] #, 'ns=6000']
     
     num_classes = [2, 3]
     cnames = ['nc=2', 'nc=3']
     
-    oversample = [True, False]
-    osnames = ["os=t", "os=f"]
+    oversample = [True] #, False]
+    osnames = ["os=t"] #, "os=f"]
     
     algnames = ["NN", "DT", "RandomForest", "AdaBoost", "GaussianNB", "LDA", "QDA", "SGD", "NNet"]
     algs = [
