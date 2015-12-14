@@ -44,9 +44,7 @@ jonathan.campbell@mcgill.ca}}
 
 \begin{abstract}
 
-Using an existing dataset of patient-hospital encounters, we present methodology for predicting the readmission of diabetic patients based on selected features of the encounters.
-
-%This project gives an overview of the methods for predicting the readmission rates and classifying the diabetic patients based on their diagnoses, whether they are admitted before or after 30 days or not readmitted at all. An existing 10 years’ clinical database of 130 US hospitals was used for this project [1].
+Using an existing dataset of patient-hospital encounters, we present methodology for predicting the readmission of diabetic patients based on selected features of the encounters. An existing dataset of encounters from 130 U.S. hospitals was used~\cite{dataset-2014} and pre-processing of this dataset is discussed with respect to problems of class imbalances and missing data. The best performance was obtained using Support Vector Machines with a precision value of 61\%.
 
 \end{abstract}
 
@@ -105,28 +103,39 @@ Using an existing dataset of patient-hospital encounters, we present methodology
 
 \section{Introduction}
 
-Diabetes affects 336 million people worldwide and is predicted to increase to 552 million in 2030 (missing ref)~\ref{missing}. Prediction of relevant factors resulting in readmission of diabetic patients is very important to reduce the large physical and finanical costs associated with readmission. This paper deals with the prediction of readmission of diabetic patients using a machine learning approach on a pre-existing dataset. We describe related research with said dataset in section 2, followed by a brief description of the dataset in section 3. Due to particularities with the dataset, several data pre-processing methods were performed and are discussed in section 4, followed by an explanation of the performance measurement criteria used in the project in section 5. We continue with brief descriptions of machine learning algorithms used, including baseline methods, with some focus on methods known to perform better on the dataset. The paper concludes with presentation and discussion of results.
+Diabetes affects 336 million people worldwide and is predicted to increase to 552 million in 2030~\cite{estimates-2011}. Prediction of relevant factors resulting in readmission of diabetic patients is very important to reduce the large physical and finanical costs associated with readmission. This paper deals with the prediction of readmission of diabetic patients using a machine learning approach on a pre-existing dataset. We describe related research with said dataset in section 2, followed by a brief description of the dataset in section 3. Due to particularities with the dataset, several data pre-processing methods were performed and are discussed in section 4, followed by an explanation of the performance measurement criteria used in the project in section 5. We continue with brief descriptions of machine learning algorithms used, including baseline methods, with some focus on methods known to perform better on the dataset. The paper concludes with presentation and discussion of results and future work.
+
+\subsection{Target Prediction Task}
+
+As said above, the goal of this paper is to predict the readmission of diabetic patients based on various features recorded during their hospital visits. There are three target classes: readmitted before 30 days (class 1), after 30 days (class 2), or not readmitted at all (class 3).
 
 \section{Related Work}
 
-Diabetes or “diabetes mellitus” is a metabolic disorder characterized by hyperglycemia and disturbance of metabolism of fat protein and carbohydrates, caused by imperfections of insulin secretion or functioning~\cite{worldhealthorganization-2015}. Morbidity of patients in hospitals is significantly determined by the management of hyperglycemia in the hospitalized patients~\cite{hyperglycemia-2002, unrecognizeddiabetes-1998}. Readmission of patients to hospitals impacts the economy and quality of healthcare services. In terms of cost, readmission of patients cost the United States \$41.3 billion in 2011~\cite{missing}, out of which unchecked diabetes accounted for 23,700 readmissions at a cost of \$251 million~\cite{missing}. Rising readmission rates have prompted the Centers for Medicare \& Medicaid Services (CMS) to introduce measures to curb the problem~\cite{readmissionreduction-2015}.
+Diabetes or “diabetes mellitus” is a metabolic disorder characterized by hyperglycemia and disturbance of metabolism of fat protein and carbohydrates, caused by imperfections of insulin secretion or functioning~\cite{worldhealthorganization-2015}. Morbidity of patients in hospitals is significantly determined by the management of hyperglycemia in the hospitalized patients~\cite{hyperglycemia-2002, unrecognizeddiabetes-1998}. Readmission of patients to hospitals impacts the economy and quality of healthcare services. In terms of cost, readmission of patients cost the United States \$41.3 billion in 2011~\cite{estimates-2011}, out of which unchecked diabetes accounted for 23,700 readmissions at a cost of \$251 million~\cite{sas-2015}. Rising readmission rates have prompted the Centers for Medicare \& Medicaid Services (CMS) to introduce measures to curb the problem~\cite{readmissionreduction-2015}.
 
-The impact of HbA1c measurement on hospital readmission rates was studied with the same dataset we are using using a multivariate logistic regression algorithm~\cite{hba1c-2014}. Although the research showed the importance of this feature, a study of other relevant features was excluded. Another paper used a commercial Support Vector Machine algorithm (SAS Enterprise Miner) on the same dataset and obtained an accuracy of 63.7\%~\cite{missing (sas paper)}, but the handling of missing data was not properly managed and medical speciality of the attending doctor was removed, which is an important feature in deciding the outcome of the medical services rendered and eventually the readmission prediction. Furthermore, the measurement criteria used was the mis-classification rate, which is unreliable due to the imbalance of target classes. The demographics of diabetic patients were predicted using the same database in another paper on the same dataset~\cite{missing}, and the authors obtained an accuracy of 53.3\% using an ensemble method of decision trees.
+The impact of HbA1c measurement on hospital readmission rates was studied with the same dataset we are using using a multivariate logistic regression algorithm~\cite{hba1c-2014}. Although the research showed the importance of this feature, a study of other relevant features was excluded. Another paper used a commercial Support Vector Machine algorithm (SAS Enterprise Miner) on the same dataset and obtained an accuracy of 63.7\%~\cite{sas-2015}, but the handling of missing data was not properly managed and medical speciality of the attending doctor was removed, which is an important feature in deciding the outcome of the medical services rendered and eventually the readmission prediction. Furthermore, the measurement criteria used was the mis-classification rate, which is unreliable due to the imbalance of target classes. The demographics of diabetic patients were predicted using the same database in another paper on the same dataset~\cite{cotha-2015}, and the authors obtained an accuracy of 53.3\% using an ensemble method of decision trees.
 
 \section{Dataset Description \& Analysis}
 
 % discuss presence of missing data, what the features are, amount, where dataset came from...
 
-A ten-year clinical database of 130 U.S. hospitals was used for our target prediction task~\cite{dataset-2014, hba1c-2014}. The dataset has 101,766 instances with 49 features (demographics, diagnoses, hbA1c measurement, etc.) with one target feature. The features are categorical and continuous and were encoded as described in the appendix for the application of machine learning algorithms. The number of possible value after encoding for each features is mentioned in Figure 1.
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.5\textwidth]{dataset}
+	\caption{Number of unique values for each feature in the dataset.}
+	\label{fig:dataset}
+\end{figure}
+
+A ten-year clinical database of 130 U.S. hospitals was used for our target prediction task~\cite{dataset-2014, hba1c-2014}. The dataset has 101,766 instances with 49 features (demographics, diagnoses, hbA1c measurement, etc.) with one target feature. The features are categorical and continuous and were encoded as described in the appendix for the application of machine learning algorithms. The number of possible values after encoding for each features is mentioned in Figure~\ref{fig:dataset}.
 
 Duplicate encounters of patients were removed from the database to satisfy the I.I.D (Independent and Identically Distributed) assumption of the classification algorithms. Class imbalance and problems of missing data are described and dealt in Sections 4.2 and 4.3 respectively.
-
-Figure 1. Description of database
 
 \section{Data Pre-processing}
 
 % discuss categorization of data
 % smote, over sampling
+
+Medical database especially diabetic database is associated with lot of anomalies. Pre-processing of the database is first and foremost step before proceeding further with the machine learning approaches.
 
 \subsection{Feature Selection}
 % removal of certain features not relevant (as per paper), possible combination of target into 2 classes...
@@ -134,24 +143,65 @@ Feature selection is a technique that reduces the dimension of a dataset's featu
 
 We used two feature selection techniques with our learners: Principal Component Analysis (PCA) and Analysis of Variance (ANOVA). PCA functions by projecting the vectors in the feature space into eigenspace. In this space, it is easy to determine which components have the largest variance. These components are likely to hold the greatest predictive information, and as such they are labeled the principal components. PCA then removes a parameterized number of features to remove from the feature space and produces a transformed dataset. ANOVA performs similar feature reduction but selects the features that have the highest F-score when compared to the predicted class. For each algorithm, the best choice for number of features to keep can be determined with standard hyper parameter selection techniques. We used grid search for this purpose.
 
+\subsection{Class Imbalance}
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.5\textwidth]{class_imbalance}
+	\caption{Number of instances for each class in the dataset.}
+	\label{fig:class_imbalance}
+\end{figure}
+
+Class imbalance problem arises when the number of instances of one class is very large compared to the example from other class, which leads to poor accuracy of the classifier for class with less instances. Class imbalance problem can be solved using two approaches, namely data and algorithm~\cite{purwar-2014}. One popular data-based approach using clustering is called SMOTE, which has proven to be very useful for dealing with class imbalance problem~\cite{smote-2012}. We used this approach for our project. Modified SVM using decision threshold adaptation~\cite{wu-2003, raskutti-2004}, variation of likelihood estimation in decision trees~\cite{weiss-2003} are some of the algorithm approaches for data imbalance problem.
+
+Figure~\ref{fig:class_imbalance} depicts the class imbalance problem with the dataset where the ratio between class 3 vs class 1 is 6.71. Class 1 examples were oversampled with a ratio of 6.71 using SMOTE technique. Class 2 instances were not oversampled as the number of instances of class 2 compared to class 1 was in a ratio of 1.9. Different Performance of the oversampled dataset and raw dataset is discussed in section 7.
+
 \subsection{Data Imputation}
 
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.5\textwidth]{missing_data}
+	\caption{Percentage of missing data for various features of the dataset.}
+	\label{fig:missing_data}
+\end{figure}
+
 % deletion of missing data, using model-based approach to fill in values...
+
+Missing data is a serious problem in medical databases especially with the diabetic database and that limits the use of machine learning algorithm for medical databases. However, there are various methods available to deal with the missing data problem~\cite{imputation-96}. Treatment of the missing data should be done carefully to prevent bias introduction~\cite{gustavo-2003}. Two different methods of data imputation were experimented in this project namely data deletion and data substitution using model based approach. Different model based approach such as Auto Class C4.5~\cite{lakshminarayan-1999}, k-nearest neighbour~\cite{gustavo-2003} etc. were also used for data imputation. Figure~\ref{fig:missing_data} represents the missing data in the dataset with three features having the highest percentage of missing data.
+
+Missing data problem was dealt using two different methods i.e. Deletion Method and Model Based Substitution Method. Deletion method was applied to weight and payer code attribute while deletion and model based substitution method was utilized for medical speciality attribute. Decision tree classifier and k-nearest neighbour was used as model for substitution method as was suggested from the literature of missing data problem. Cross Validation was used for hyper parameter optimization. Target attribute was medical speciality with 70 classes and 30891 instances. Decision tree classifier performance was best with accuracy of 51.2 \% with 11 as the depth of tree. Dataset after imputation was having 72936 instances and 44 attributes and 1 target task.
+
 
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
 
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.5\textwidth]{precision_recall}
+	\caption{Pictorial representation of precision \& recall.}
+	\label{fig:precision_recall}
+\end{figure}
+
+Precision was used as the performance measurement criteria for the classifiers as shown in Figure~\ref{fig:precision_recall}. Since the dataset is imbalance thus measuring the accuracy of the classifier was not a feasible criterion. Also the cost associated with classifying a patient which was readmitted as not readmitted is higher than other way around. Precision is given by the following equation.
+
+\[ Precision = \frac{(True Positive}{True Positive + False Positive} \]
 
 \section{Methodology}
 
+Methodologies such as Naïve Bayes, Decision Trees etc. were implemented as the baseline learner as mentioned in section 6.1 from scikit learn library. Support Vector Machines, Neural Network and Adaboost classifier was also implemented as mentioned in section 6.2, 6.3 and 6.4 respectively from scikit learn library. Dataset containing 72936 instances and 44 attributes was divided into training and testing set as 70\% / 30\%. All the results mentioned in section 7 was achieved on the testing set of 21880 instances, 44 attributes and the performance criteria used for measuring the performance of classifier was precision as mentioned in section 5. Hyper parameter associated with different classifiers were optimized via cross validation using scikit learn Grid Search CV.
+
 \subsection{Baseline learners}
+
+Six different baseline classifiers mentioned below were implemented for measuring the performance of baseline classifiers: Gaussian Naïve Bayes, Decision Trees, Random Forest, Linear Discriminant Analysis, Quadratic Discriminant Analysis and k-Nearest Neighbour.
+
+\subsection{Neural Networks}
+
+\subsection{Adaboost}
 
 \subsection{Support Vector Machines (SVM)}
 SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching [cite SAS paper]. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The decision boundary is constructed by maximizing the geometric margin between the boundary and the points closest to the boundary. Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
 
 With the given dataset, we explored using SVMs with several types of kernel functions: linear, polynomial, and rbf (radial basis function). Kernel functions are used by SVMs to determine the distance between two points. The proper choice of kernel function can have a significant impact on the performance of the decision boundary. We saw a 10\% accuracy difference between a linear SVM and rbf SVM.
-
-\subsection{Adaboost}
 
 \section{Results}
 
@@ -233,9 +283,7 @@ The confusion matrix for figure~\ref{fig:full_results} is shown in figure~\ref{f
 
 \appendices
 \section{Statement of Contributions}
-Ashish - \par
-Charlie - \par
-Jonathan - \par
+This report is a joint contribution of all the team members. Data Imputation and Data Imbalance problem was done by Ashish. Jonathan did the algorithms for machine learning classification including neural network. Feature selection and SVM was done by Charlie.
 
 We hereby state that all work presented in this report is that of the authors.
 
