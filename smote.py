@@ -14,13 +14,11 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.lda import LDA
 from sklearn.qda import QDA
-from unbalanced_dataset import UnderSampler, NearMiss, CondensedNearestNeighbour, OneSidedSelection,\
-NeighbourhoodCleaningRule, TomekLinks, ClusterCentroids, OverSampler, SMOTE,\
-SMOTETomek, SMOTEENN, EasyEnsemble, BalanceCascade
+from unbalanced_dataset import UnderSampler, NearMiss, CondensedNearestNeighbour, OneSidedSelection, NeighbourhoodCleaningRule, TomekLinks, ClusterCentroids, OverSampler, SMOTE, SMOTETomek, SMOTEENN, EasyEnsemble, BalanceCascade
 import itertools
-data_train, data_test, target_train, target_test = common.load_test_train_as_two_class()
-data_train1 = np.asarray(data_train)
-target_train1 = np.array(target_train)
+#data_train, data_test, target_train, target_test = common.load_test_train_as_two_class()
+#data_train1 = np.asarray(data_train)
+#target_train1 = np.array(target_train)
 def random_methods(data_train1,target_train1):
     rng = np.random.RandomState(96235)
     names = ["SGD", "Nearest Neighbors", "ensembel","Decision Tree","Random Forest", "AdaBoost", "Naive Bayes", "LDA", "QDA"]
@@ -44,6 +42,16 @@ def random_methods(data_train1,target_train1):
         print(score)
         predicted_test = clf.fit(data_train1, target_train1).predict(data_test)
         print(metrics.classification_report(target_test, predicted_test))
+
+def smote_data(data_train, target_train):
+    y = np.bincount(target_train)
+    ratio = 1.5 # float(y[2] + y[1]) / float(y[0])
+  #  smote = SMOTE(ratio=ratio, verbose=True, kind='regular')
+  #  smox, smoy = smote.fit_transform(data_train, target_train)
+    OS = OverSampler(ratio=ratio, verbose=True)
+    osx, osy = OS.fit_transform(data_train, target_train)
+    return osx, osy
+    
 def sampling():
     verbose = False
     y = np.bincount(target_train1)
@@ -86,4 +94,4 @@ def sampling():
     BS = BalanceCascade(verbose=verbose)
     bsx, bsy = BS.fit_transform(data_train1, target_train1)
     random_methods(bsx,bsy)
-sampling()
+#sampling()

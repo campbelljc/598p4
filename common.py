@@ -1,8 +1,9 @@
 import csv
-from sklearn.cross_validation import train_test_split
+import smote as sm
 import numpy as np
+from sklearn.cross_validation import train_test_split
 
-def load_train_data_and_split(testsize=0.3, targetcol=-1, file='data/processed_without_missing.csv', split=True, num_samples_per_class=-1):
+def load_train_data_and_split(testsize=0.3, targetcol=-1, file='data/processed_without_missing.csv', split=True, num_samples_per_class=-1, num_classes=3, smote=False):
     print("Loading dataset.")
 
     headers = []
@@ -49,22 +50,31 @@ def load_train_data_and_split(testsize=0.3, targetcol=-1, file='data/processed_w
             del outputs[remove_indices[i]]
         print("Final counts: ", counts)
         
-    print("Num inputs: ", len(inputs))
+    print("Num rows: ", len(inputs))
     print("Done loading")
     
+    for i in range(len(outputs)):
+        outputs[i] -= 1
+                
     if split:
         input_train, input_test, output_train, output_test = train_test_split(inputs, outputs, test_size=testsize, random_state=42)
+
+        input_train = np.array(input_train)
+        input_test = np.array(input_test)
+        output_train = np.array(output_train)
+        output_train = output_train.astype(np.int32)
+        output_test = np.array(output_test)
+        output_test = output_test.astype(np.int32)
+
+        if num_classes == 2: # convert all outputs of 3 to outputs of 2.
+            output_train[output_train == 2] = 1
+            output_test[output_test == 2] = 1
+
+        if smote:
+            input_train, output_train = sm.smote_data(input_train, output_train)
+        
         return input_train, input_test, output_train, output_test
     else:
-        return inputs
-
-def load_test_train_as_two_class(ts=0.3, f='data/processed_missing_filled_in.csv'):
-    x_train, x_test, y_train, y_test = load_train_data_and_split(testsize=ts, file=f)
-    x_train = np.array(x_train)
-    x_test = np.array(x_test)
-    y_train = np.array(y_train)
-    y_test = np.array(y_test)
-
-    y_train[y_train == 3] = 2
-    y_test[y_test == 3] = 2
-    return x_train, x_test, y_train, y_test
+        inputs = np.array(inputs)
+        outputs = np.array(outputs)
+        return inputs, outputs

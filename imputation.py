@@ -23,7 +23,6 @@ from sklearn.qda import QDA
 
 # col 6 is med. speciality
 data_train, data_test, target_train, target_test = common.load_train_data_and_split(targetcol=6)
-missing_data_rows = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)
 
 def random_methods():
     names = ["SGD", "Nearest Neighbors", "linear-SVM","SVC","Decision Tree",
@@ -51,10 +50,13 @@ def random_methods():
 #random_methods()
 
 def dt_classifier():
-    dt_clf = DecisionTreeClassifier(max_depth=11)
+    dt_clf = DecisionTreeClassifier(max_depth=25)
     dt_clf.fit(data_train, target_train)
+    
+    missing_data_rows, op = common.load_train_data_and_split(targetcol=6, file='data/processed_only_missing.csv', split=False)
+    
     preds = list(dt_clf.predict(missing_data_rows))
-    print [[x,preds.count(x)] for x in set(preds)]
+#    print [[x,preds.count(x)] for x in set(preds)]
     return preds
     
 def Logistic_cross_vaildation():
