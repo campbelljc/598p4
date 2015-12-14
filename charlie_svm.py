@@ -46,7 +46,8 @@ print(grid.best_score_)
 
 predictions = grid.predict(data_test)
 np.save('data/predictions', predictions)
-print(metrics.precision_recall_fscore_support(target_test, predictions))
+
+#print(metrics.precision_recall_fscore_support(target_test, predictions))
 print(metrics.classification_report(target_test, predictions))
 
 cm = confusion_matrix(target_test, predictions)
