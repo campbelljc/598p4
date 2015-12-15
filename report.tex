@@ -89,22 +89,15 @@ As mentioned above, the goal of this paper is to predict the readmission of diab
 
 Diabetes or “diabetes mellitus” is a metabolic disorder characterized by hyperglycemia and disturbance of metabolism of fat protein and carbohydrates, caused by imperfections of insulin secretion or functioning~\cite{worldhealthorganization-2015}. Morbidity of patients in hospitals is significantly determined by the management of hyperglycemia in the hospitalized patients~\cite{hyperglycemia-2002, unrecognizeddiabetes-1998}. Readmission of patients to hospitals impacts the economy and quality of healthcare services. In terms of cost, readmission of patients cost the United States \$41.3 billion in 2011~\cite{estimates-2011}, out of which unchecked diabetes accounted for 23,700 readmissions at a cost of \$251 million~\cite{sas-2015}. Rising readmission rates have prompted the Centers for Medicare \& Medicaid Services (CMS) to introduce measures to curb the problem~\cite{readmissionreduction-2015}.
 
-The impact of HbA1c measurement on hospital readmission rates was studied with the same dataset we are using using a multivariate logistic regression algorithm~\cite{hba1c-2014}. Although the research showed the importance of this feature, a study of other relevant features was excluded. Another paper used a commercial Support Vector Machine algorithm (SAS Enterprise Miner) on the same dataset and obtained an accuracy of 63.7\%~\cite{sas-2015}, but the handling of missing data was not properly managed and medical speciality of the attending doctor was removed, which is an important feature in deciding the outcome of the medical services rendered and eventually the readmission prediction. Furthermore, the measurement criteria used was the mis-classification rate, which is unreliable due to the imbalance of target classes. The demographics of diabetic patients were predicted using the same database in another paper on the same dataset~\cite{cotha-2015}, and the authors obtained an accuracy of 53.3\% using an ensemble method of decision trees.
+The impact of HbA1c measurement on hospital readmission rates was studied with the same dataset we are using using a multivariate logistic regression algorithm~\cite{hba1c-2014}. Although the research showed the importance of this feature, a study of other relevant features was excluded. Another paper used a commercial Support Vector Machine algorithm (SAS Enterprise Miner) on the same dataset and obtained an accuracy of 63.7\%~\cite{sas-2015}, but the handling of missing data was not properly managed and medical speciality of the attending doctor was removed, which is an important feature in deciding the outcome of the medical services rendered and eventually the readmission prediction. Furthermore, the measurement criteria used was the misclassification rate, which is unreliable due to the imbalance of target classes. The demographics of diabetic patients were predicted using the same database in another paper on the same dataset~\cite{cotha-2015}, and the authors obtained an accuracy of 53.3\% using an ensemble method of decision trees.
 
 \section{Dataset Description \& Analysis}
 
 % discuss presence of missing data, what the features are, amount, where dataset came from...
 
-\begin{figure}[htpb]
-	\centering
-	\includegraphics[width=0.4\textwidth]{dataset}
-	\caption{Number of unique values for each feature in the dataset.}
-	\label{fig:dataset}
-\end{figure}
+A ten-year clinical database of 130 U.S. hospitals used in a previous study of diabetic patient readmission rates was used for our target prediction task~\cite{dataset-2014, hba1c-2014}. The dataset has 101,766 instances with 49 features, including demographics, personal characteristics, information about the person's time in hospital, medical diagnoses and relevant measurements, medications administered, procedures performed, and so on. The target feature is that of readmission of said patient before 30 days, after 30 days, or not at all. The features are presented in several different types (strings, integers, ranges of integers, etc).
 
-A ten-year clinical database of 130 U.S. hospitals was used for our target prediction task~\cite{dataset-2014, hba1c-2014}. The dataset has 101,766 instances with 49 features (demographics, diagnoses, hbA1c measurement, etc.) with one target feature. The features are categorical and continuous and were encoded as described in the appendix for the application of machine learning algorithms. The number of possible values after encoding for each features is mentioned in Figure~\ref{fig:dataset}.
-
-Duplicate encounters of patients were removed from the database to satisfy the IID (independent and identically distributed) assumption of the classification algorithms. Class imbalance and problems of missing data are described and dealt in Sections 4.2 and 4.3 respectively.
+There is a large amount of missing data in the dataset, specifically for the weight, payer code, and medicial specialty of the attending doctor. Approaches to deal with this missing data are discussed below. Further, there is a large class imbalance in the dataset: most of the instances are of class 0 (readmitted before 30 days). Approaches to deal with this problem are also discussed below.
 
 \section{Data Pre-processing}
 
@@ -155,7 +148,18 @@ We used two feature selection techniques with our learners: Principal Component 
 
 \subsection{Data Encoding}
 
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.4\textwidth]{dataset}
+	\caption{Number of unique values for each feature in the dataset.}
+	\label{fig:dataset}
+\end{figure}
 
+Values in the original dataset could take the form of strings, integer ranges, and other unpalatable types for machine learning algorithms, so were all encoded to integer values. Some features, such as medical specialty (a string in the original dataset), were converted to binary features (one feature for each possible medical specialty, with a value of 1 for the attending doctor having that medicial specialty and 0 for not having it). This conversion was done since converting said value to a categorical range of 1...n would not make sense, since it introduces an ordering to the medical specialties that has no basis in reality. Other features, such as age, were encoded using a categorical range since an ordering was already present.
+
+Further, duplicate encounters of patients were removed from the database to satisfy the IID (independent and identically distributed) assumption of the classification algorithms.
+
+The number of possible values for each feature is mentioned in Figure~\ref{fig:dataset} - for those that were translated to categorical ranges, the range goes from 1 to the total number of features.
 
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
@@ -265,7 +269,7 @@ Precision, recall, and f1-score metrics for the three target classes using a sam
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{confmatrix_SGD_PCA}
+	\includegraphics[width=0.5\textwidth]{confmatrix_SGD-PCA}
 	\caption{Confusion matrix of SGD learner with PCA on dataset with deleted missing data.}
 	\label{fig:sgd_pca_results}
 \end{figure}
@@ -283,7 +287,7 @@ The confusion matrix for figure~\ref{fig:full_results} is shown in figure~\ref{f
 
 \section{Discussion}
 
-Performance of complex classifiers was better than the baseline classifier because of efficient decision boundary conditions which prevents the overfitting problem as shown in Figure 5. Dataset used herein had class imbalance and missing data problem which was observe to effect the performance of the classifiers. Different methods of handling the missing data and class imbalance problem 
+Performance of complex classifiers was better than the baseline classifier because of efficient decision boundary conditions which prevents the overfitting problem as shown in Figure~\ref{fig:learner_comp}. Dataset used herein had class imbalance and missing data problem which was observe to effect the performance of the classifiers. Different methods of handling the missing data and class imbalance was utilized. However, it was observed that the deletion method of missing data performed better than the substitution method. Detailed study is required before utilizing any substitution method because of the nature of missing data i.e. MCAR or MAR, which was beyond the scope of this project. However, the oversampling method to resolve the class imbalance problem increased the performance of classifier as shown in Figure~\ref{fig:adaboost}. It can be observed that with six different combinations of missing data and class imbalance techniques, the results varied by only 3\%. So there may be some inherent anomalies in the dataset which is causing such poor performance of every technique. Most of the classifier performed better with the oversampling as shown in Figure~\ref{fig:oversampling_comp}. However, the class imbalance problem resulted in very low precision score of all the classifier for class 0. Figure~\ref{fig:full_results_cm} represents the confusion matrix of SGD classifier where the classifier was able to classify better class 1 and class 2 but was not able to classify class 0 properly due to the class imbalance problem. 
 
 \section{Conclusion}
 
