@@ -178,7 +178,13 @@ Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Tr
 \subsection{Neural Networks}
 
 \subsection{Adaboost}
-Adaboost 
+Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, 'bootstrapped' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where \[F(x)\] is the classification of the ensemble method and \[a_{i}f_{i}(x)\] is the classification of a weak learner.
+
+\[
+	F(x) = \sum_{i} a_{i}f(x)
+\]
+
+Unlike other ensemble methods, Adaboost bootstraps subsets by weighting the data points based on whether or not they've been correctly classified by other weak learners in the group. This forces the ensemble to learn the qualities of hard-to-classify data. In general this learner has very low bias and variance and tends to generalize well to test data. It has been shown to work well for classifying health care datasets similar to the one at hand~\cite{adaboost-breast-cancer}.
 
 \subsection{Support Vector Machines (SVM)}
 SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching [cite SAS paper]. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The decision boundary is constructed by maximizing the geometric margin between the boundary and the points closest to the boundary. Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
