@@ -183,13 +183,18 @@ For all algorithms, the train/test split was 66\%/33\%. The precision metric was
 
 \subsection{Baseline learners}
 
-Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Trees, Random Forest, Linear Discriminant Analysis, Quadratic Discriminant Analysis and k-Nearest Neighbour. Hyperparameters were tuned in a non-rigorous manner from the default settings. All algorithm implementations come from the scikit-learn Python machine learning library~\cite{scikit-learn}.
+Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Trees, Random Forests, Linear Discriminant Analysis, Quadratic Discriminant Analysis and k-Nearest Neighbour. Hyperparameters were tuned in a non-rigorous manner from the default settings. All algorithm implementations come from the scikit-learn Python machine learning library~\cite{scikit-learn}.
 
 \subsection{Neural Networks}
 
-Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method~\cite{mohamed-2002}. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach~\cite{pappada-2011, zainuddin-2009}. 
+Regular feed-forward neural networks, used as a classifier in this project, use neurons distributed in different layers: input, hidden, and output layers. The neural network receives input through the former layer, the inputs pass through the hidden layers and in the end the prediction is propagated to the output layer. Each hidden layer will receive its inputs from the layer directly antecedent to it. Output values of the neurons are updated by taking values of certain activation functions as a linear combination of the inputs and an additional bias. The coefficients of this linear combination are called weights and are associated to specified neurons.
+
+Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method~\cite{mohamed-2002}. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach~\cite{pappada-2011, zainuddin-2009}.
+
+We use the neural network implementation from the nolearn lasagne Python machine learning library~\cite{nolearn}. Hyperparameters were optimized using the scikit-learn grid search algorithm~\cite{scikit-learn}. The final hyperparameters chosen by the grid search were two hidden layers, with 300 nodes in the first and 750 in the second, using a softmax function and nesterov momentum update, and learning rate of 0.001. 15 epochs were performed to obtain the final result, at which point the accuracy did not improve any longer.
 
 \subsection{Adaboost}
+
 Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, \'bootstrapped\' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where $F_{e}(x)$ is the classification of the ensemble method and $a_{w}f_{w}(x)$ is the weighted classification of a weak learner.
 
 \[
@@ -219,7 +224,7 @@ Because there is a sense of a best boundary, SVMs have the powerful quality of b
 
 With the given dataset, we explored using scikit learn's SVM with several types of kernel functions: linear, polynomial, and rbf (radial basis function). Kernel functions are used by SVMs to determine the distance between two points. The proper choice of kernel function can have a significant impact on the performance of the decision boundary. We saw a 10\% accuracy difference between a linear SVM and rbf SVM.
 
-We used the SVM implementation from the scikit-learn library~\cite{scikit-learn}. Grid search from the same library was used to optimize all hyperparameters.
+We used the SVM implementation from the scikit-learn library~\cite{scikit-learn}. Grid search from the same library was used to optimize all hyperparameters. The final hyperparameters used was an elasticnet penalty function, modified_huber loss function, and alpha value of 0.1.
 
 \section{Results}
 
