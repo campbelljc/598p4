@@ -164,16 +164,16 @@ The number of possible values for each feature is mentioned in Figure~\ref{fig:d
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
 
-\begin{figure}[htpb]
-	\centering
-	\includegraphics[width=0.5\textwidth,scale=0.5]{precision_recall}
-	\caption{Pictorial representation of precision \& recall.}
-	\label{fig:precision_recall}
-\end{figure}
-
 Precision was used as the performance measurement criteria for the classifiers as shown in Figure~\ref{fig:precision_recall}. Since the dataset is imbalanced, measuring the accuracy of the classifier was not a feasible criterion. Also, the cost associated with classifying a patient who was readmitted as not readmitted is higher than the reverse, so precision was the better choice. Precision is given by the following equation.
 
 \[ Precision = \frac{True Positive}{True Positive + False Positive} \]
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.25\textwidth]{precision_recall}
+	\caption{Pictorial representation of precision \& recall.}
+	\label{fig:precision_recall}
+\end{figure}
 
 \section{Methodology}
 
@@ -187,7 +187,7 @@ Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Tr
 
 \subsection{Neural Networks}
 
-Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method [1]. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach [2 ,3]. 
+Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method~\cite{}. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach [2 ,3]. 
 
 \subsection{Adaboost}
 Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, \'bootstrapped\' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where $F_{e}(x)$ is the classification of the ensemble method and $a_{w}f_{w}(x)$ is the weighted classification of a weak learner.
@@ -206,6 +206,7 @@ SVMs are well known for being very effective learners in the realm of classifyin
 \[
 \begin{aligned}
 \underset{\alpha}{\text{maximize}} \sum_i \alpha_k - \frac{1}{2} \sum_{i, j} y_i y_j \alpha_i \alpha_j (x_i x_i)
+\end{aligned}
 \]
 
 subject to the constraints
@@ -269,7 +270,7 @@ Precision, recall, and f1-score metrics for the three target classes using a sam
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{confmatrix_SGD-PCA}
+	\includegraphics[width=0.5\textwidth]{confmatrix_sgd-pca}
 	\caption{Confusion matrix of SGD learner with PCA on dataset with deleted missing data.}
 	\label{fig:sgd_pca_results}
 \end{figure}
@@ -278,7 +279,7 @@ The best results of applying PCA before SVM classification are shown below~\ref{
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.25\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
+	\includegraphics[width=0.5\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
 	\caption{Confusion matrix of SGD learner on dataset with imputed missing data.}
 	\label{fig:full_results_cm}
 \end{figure}
