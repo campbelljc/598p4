@@ -197,10 +197,10 @@ Six different baseline classifiers mentioned below were implemented for measurin
 \subsection{Neural Networks}
 
 \subsection{Adaboost}
-Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, 'bootstrapped' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where \[F(x)\] is the classification of the ensemble method and \[a_{i}f_{i}(x)\] is the classification of a weak learner.
+Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, 'bootstrapped' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where $F_{e}(x)$ is the classification of the ensemble method and $a_{w}f_{w}(x)$ is the weighted classification of a weak learner.
 
 \[
-	F(x) = \sum_{i} a_{i}f(x)
+	F_{e}(x) = \sum_{w} a_{w}f_{w}(x)
 \]
 
 Unlike other ensemble methods, Adaboost bootstraps subsets by weighting the data points based on whether or not they've been correctly classified by other weak learners in the group. This forces the ensemble to learn the qualities of hard-to-classify data. In general this learner has very low bias and variance and tends to generalize well to test data. It has been shown to work well for classifying health care datasets similar to the one at hand~\cite{adaboost-breast-cancer}.
