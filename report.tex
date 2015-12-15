@@ -16,7 +16,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Predicting Readmission Rate of Diabetic Patients}
+\title{Predicting Hospital Readmission Rate of Diabetic Patients}
 
 
 % author names and affiliations
@@ -121,7 +121,7 @@ The impact of HbA1c measurement on hospital readmission rates was studied with t
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{dataset}
+	\includegraphics[width=0.4\textwidth]{dataset}
 	\caption{Number of unique values for each feature in the dataset.}
 	\label{fig:dataset}
 \end{figure}
@@ -148,7 +148,7 @@ For each algorithm, the choice of how many features to keep can be determined wi
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{class_imbalance}
+	\includegraphics[width=0.4\textwidth]{class_imbalance}
 	\caption{Number of instances for each class in the dataset.}
 	\label{fig:class_imbalance}
 \end{figure}
@@ -161,7 +161,7 @@ Figure~\ref{fig:class_imbalance} depicts the class imbalance problem with the da
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{missing_data}
+	\includegraphics[width=0.4\textwidth,scale=0.7]{missing_data}
 	\caption{Percentage of missing data for various features of the dataset.}
 	\label{fig:missing_data}
 \end{figure}
@@ -178,14 +178,14 @@ Missing data problem was dealt using two different methods i.e. Deletion Method 
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{precision_recall}
+	\includegraphics[width=0.5\textwidth,scale=0.5]{precision_recall}
 	\caption{Pictorial representation of precision \& recall.}
 	\label{fig:precision_recall}
 \end{figure}
 
 Precision was used as the performance measurement criteria for the classifiers as shown in Figure~\ref{fig:precision_recall}. Since the dataset is imbalance thus measuring the accuracy of the classifier was not a feasible criterion. Also the cost associated with classifying a patient which was readmitted as not readmitted is higher than other way around. Precision is given by the following equation.
 
-\[ Precision = \frac{(True Positive}{True Positive + False Positive} \]
+\[ Precision = \frac{True Positive}{True Positive + False Positive} \]
 
 \section{Methodology}
 
@@ -207,12 +207,12 @@ With the given dataset, we explored using SVMs with several types of kernel func
 
 \section{Results}
 
-\begin{figure}[htpb]
+\begin{figure*}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{learner_comparison}
+	\includegraphics[width=\textwidth]{learner_comparison}
 	\caption{Comparison of precision scores of learners on dataset with missing data deleted and no oversampling performed.}
 	\label{fig:learner_comp}
-\end{figure}
+\end{figure*}
 
 Figure~\ref{fig:learner_comp} shows the precision scores of the various methods discussed above. Results across the board were not particularly impressive compared to the random baseline of 0.333, ranging from 0.49 to 0.61. k-Nearest Neigbor and Neural Net performed the worst. The highest-performing algorithm was the Support Vector Machine (SGD), followed by AdaBoost.
 
@@ -236,7 +236,7 @@ Figure~\ref{fig:oversampling_comp} shows the effect of oversampling on precision
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{adaboost}
+	\includegraphics[width=0.5\textwidth,scale=0.75]{adaboost}
 	\caption{Precision scores of Adaboost learner for various data pre-processing combinations.}
 	\label{fig:adaboost}
 \end{figure}
@@ -254,7 +254,7 @@ Precision, recall, and f1-score metrics for the three target classes using a sam
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
+	\includegraphics[width=0.25\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
 	\caption{Confusion matrix of SGD learner on dataset with imputed missing data.}
 	\label{fig:full_results_cm}
 \end{figure}
