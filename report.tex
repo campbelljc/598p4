@@ -165,16 +165,16 @@ The number of possible values for each feature is mentioned in Figure~\ref{fig:d
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
 
-\begin{figure}[htpb]
-	\centering
-	\includegraphics[width=0.5\textwidth,scale=0.5]{precision_recall}
-	\caption{Pictorial representation of precision \& recall.}
-	\label{fig:precision_recall}
-\end{figure}
-
 Precision was used as the performance measurement criteria for the classifiers as shown in Figure~\ref{fig:precision_recall}. Since the dataset is imbalanced, measuring the accuracy of the classifier was not a feasible criterion. Also, the cost associated with classifying a patient who was readmitted as not readmitted is higher than the reverse, so precision was the better choice. Precision is given by the following equation.
 
 \[ Precision = \frac{True Positive}{True Positive + False Positive} \]
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.25\textwidth]{precision_recall}
+	\caption{Pictorial representation of precision \& recall.}
+	\label{fig:precision_recall}
+\end{figure}
 
 \section{Methodology}
 
@@ -188,7 +188,7 @@ Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Tr
 
 \subsection{Neural Networks}
 
-Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method [1]. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach [2 ,3]. 
+Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method~\cite{mohamed-2002}. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach~\cite{pappada-2011, zainuddin-2009}. 
 
 \subsection{Adaboost}
 Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, \'bootstrapped\' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where $F_{e}(x)$ is the classification of the ensemble method and $a_{w}f_{w}(x)$ is the weighted classification of a weak learner.
@@ -199,14 +199,15 @@ Adaboost is a machine learning ensemble method that can perform exceptionally we
 
 Unlike other ensemble methods, Adaboost bootstraps subsets by weighting the data points based on whether or not they've been correctly classified by other weak learners in the group. This forces the ensemble to learn the qualities of hard-to-classify data. In general this learner has very low bias and variance and tends to generalize well to test data. It has been shown to work well for classifying health care datasets similar to the one at hand~\cite{adaboost-breast-cancer}.
 
-In the literature, sensor data from diabetic patients was used with different ensemble classifiers for pervasive health monitoring of CAN [4]. Different classifiers such as decision trees, support vector machines and boosted algorithms were used for an early detection of Type-2 Diabetes Mellitus in public hospitals [5].
+In the literature, sensor data from diabetic patients was used with different ensemble classifiers for pervasive health monitoring of CAN~\cite{kelarev-2012}. Different classifiers such as decision trees, support vector machines and boosted algorithms were used for an early detection of Type-2 Diabetes Mellitus in public hospitals~\cite{tama-2011}.
 
 \subsection{Support Vector Machines (SVM)}
-SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching ~cite/{sas-2015}. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The solution to the dual form of the SVM minimization expression is shown below.
+SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching ~\cite{sas-2015}. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The solution to the dual form of the SVM minimization expression is shown below.
 
 \[
 \begin{aligned}
 \underset{\alpha}{\text{maximize}} \sum_i \alpha_k - \frac{1}{2} \sum_{i, j} y_i y_j \alpha_i \alpha_j (x_i x_i)
+\end{aligned}
 \]
 
 subject to the constraints
@@ -270,7 +271,7 @@ Precision, recall, and f1-score metrics for the three target classes using a sam
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{confmatrix_SGD-PCA}
+	\includegraphics[width=0.5\textwidth]{confmatrix_sgd-pca}
 	\caption{Confusion matrix of SGD learner with PCA on dataset with deleted missing data.}
 	\label{fig:sgd_pca_results}
 \end{figure}
@@ -279,7 +280,7 @@ The best results of applying PCA before SVM classification are shown below~\ref{
 
 \begin{figure}[htpb]
 	\centering
-	\includegraphics[width=0.25\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
+	\includegraphics[width=0.5\textwidth]{full_results_confmatrix_SGD_md=imputed_ns=all_nc=3_os=f_test}
 	\caption{Confusion matrix of SGD learner on dataset with imputed missing data.}
 	\label{fig:full_results_cm}
 \end{figure}
@@ -292,14 +293,7 @@ Performance of complex classifiers was better than the baseline classifier becau
 
 \section{Conclusion}
 
-Dataset utilized for prediction of readmission rates consists of records from 130 U.S hospitals. Target prediction task was to determine the readmission rate of diabetic patients. Missing data and class imbalance problem with the dataset was handled using data substitution, data deletion methods for missing data and oversampling using SMOTE for class imbalance problem. Feature selection method such as PCA and ANOVA was also used for feature reduction and feature selection. Data deletion method was observed to perform better than data substitution method. However, the oversampling of the dataset using SMOT enhanced the performance of some classifiers but performed worst with some of the classifiers. Feature selection was observed to perform even worst and was not utilized for the classifiers herein. Literature with the diabetic databases suggested better performance of neural network, however the same was not observed with this dataset. Neural network performed worse than some of the baseline classifiers for oversampling method but performed good without the oversampling methods for class imbalance problems. Complex classifiers such as SGD and Adaboost was observed to perform better than baseline classifier such as Naïve Bayes, LDA, k-Nearest Neighbour etc. with the exception of Neural Network. 
-
-% 1 Mohamed, Ehab I., et al. "Predicting Type 2 diabetes using an electronic nose-based artificial neural network analysis." Diabetes, nutrition & metabolism 15.4 (2002): 215-221.
-% 2 Pappada, Scott M., et al. "Neural network-based real-time prediction of glucose in patients with insulin-dependent diabetes." Diabetes technology & therapeutics 13.2 (2011): 135-141.
-% 3 Zainuddin, Zarita, Ong Pauline, and Cemal Ardil. "A neural network approach in predicting the blood glucose level for diabetic patients." Int. J. Comput. Intell 5.1 (2009): 72-79.
-% 4 Kelarev, A. V., et al. "Empirical study of decision trees and ensemble classifiers for monitoring of diabetes patients in pervasive healthcare."Network-Based Information Systems (NBiS), 2012 15th International Conference on. IEEE, 2012.
-% 5 Tama, Bayu Adhi, F. S. Rodiyatul, and Hermansyah Hermansyah. "An Early Detection Method of Type-2 Diabetes Mellitus in Public Hospital."TELKOMNIKA (Telecommunication Computing Electronics and Control) 9.2 (2013): 287-294.
-
+Dataset utilized for prediction of readmission rates consists of records from 130 U.S hospitals. Target prediction task was to determine the readmission rate of diabetic patients. Missing data and class imbalance problem with the dataset was handled using data substitution, data deletion methods for missing data and oversampling using SMOTE for class imbalance problem. Feature selection method such as PCA and ANOVA was also used for feature reduction and feature selection. Data deletion method was observed to perform better than data substitution method. However, the oversampling of the dataset using SMOT enhanced the performance of some classifiers but performed worst with some of the classifiers. Feature selection was observed to perform even worst and was not utilized for the classifiers herein. Literature with the diabetic databases suggested better performance of neural network, however the same was not observed with this dataset. Neural network performed worse than some of the baseline classifiers for oversampling method but performed good without the oversampling methods for class imbalance problems. Complex classifiers such as SGD and Adaboost was observed to perform better than baseline classifier such as Naïve Bayes, LDA, k-Nearest Neighbour etc. with the exception of Neural Network.
 
 \section{Future Work}
 
