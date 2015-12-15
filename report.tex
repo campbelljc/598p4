@@ -149,7 +149,7 @@ Figure~\ref{fig:missing_data} shows the percentage of missing data in various fe
 % removal of certain features not relevant (as per paper), possible combination of target into 2 classes...
 Feature selection is a technique that reduces the dimension of a dataset's feature space. With high-dimensional data, especially when the dimension of a feature space is as large as or greater than the number of data points in a dataset, learners tend to overfit to training data. Furthermore, it is possible that features are dependent on the values of other features, in which case they add little value to the predictions produced by learning algorithms. Effective use of feature selection techniques can mitigate these problems and improve a learner's generalization performance. 
 
-We used two feature selection techniques with our learners: Principal Component Analysis (PCA) and Analysis of Variance (ANOVA). PCA functions by projecting the vectors in the feature space into eigenspace. In this space, it is easy to determine which components have the largest variance. These components are likely to hold the greatest predictive information, and as such they are labeled the principal components. PCA then removes a parameterized number of features to remove from the feature space and produces a transformed dataset. ANOVA performs similar feature reduction but selects the features that have the highest F-score when compared to the predicted class. For each algorithm, the best choice for number of features to keep can be determined with standard hyper parameter selection techniques. We used grid search for this purpose.
+We used two feature selection techniques with our learners: Principal Component Analysis (PCA) and Analysis of Variance (ANOVA). PCA functions by projecting the vectors in the feature space into eigenspace. In this space, it is easy to determine which components have the largest variance. These components are likely to hold the greatest predictive information, and as such they are labeled the principal components. PCA then removes a parameterized number of features to remove from the feature space and produces a transformed dataset. ANOVA performs similar feature reduction but selects the features that have the highest F-score when compared to the predicted class. It has been shown to work was a very successful technique while classifying high-dimensional datasets~cite{anova-classification}. For each algorithm, the best choice for number of features to keep can be determined with standard hyper parameter selection techniques. We used grid search for this purpose.
 
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
@@ -187,7 +187,20 @@ Adaboost is a machine learning ensemble method that can perform exceptionally we
 Unlike other ensemble methods, Adaboost bootstraps subsets by weighting the data points based on whether or not they've been correctly classified by other weak learners in the group. This forces the ensemble to learn the qualities of hard-to-classify data. In general this learner has very low bias and variance and tends to generalize well to test data. It has been shown to work well for classifying health care datasets similar to the one at hand~\cite{adaboost-breast-cancer}.
 
 \subsection{Support Vector Machines (SVM)}
-SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching [cite SAS paper]. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The decision boundary is constructed by maximizing the geometric margin between the boundary and the points closest to the boundary. Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
+SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching ~cite/{sas-2015}. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The solution to the dual form of the SVM minimization expression is shown below.
+
+\[
+\begin{aligned}
+\underset{\alpha}{\text{maximize}} \sum_i \alpha_k - \frac{1}{2} \sum_{i, j} y_i y_j \alpha_i \alpha_j (x_i x_i)
+\]
+
+subject to the constraints
+
+\[
+\alpha_i \ge 0 \quad and \quad \sum_i \alpha_i y_i \ge 0
+\]
+
+Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
 
 With the given dataset, we explored using scikit learn's SVM with several types of kernel functions: linear, polynomial, and rbf (radial basis function). Kernel functions are used by SVMs to determine the distance between two points. The proper choice of kernel function can have a significant impact on the performance of the decision boundary. We saw a 10\% accuracy difference between a linear SVM and rbf SVM.
 
