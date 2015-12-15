@@ -1,6 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{blindtext, graphicx}
 \usepackage[cmex10]{amsmath}
+\usepackage{hyper ref}
 \usepackage[backend=biber]{biblatex}
 \addbibresource{ref.bib}
 
@@ -31,7 +32,7 @@ jonathan.campbell@mcgill.ca}}
 
 \begin{abstract}
 
-Using an existing dataset of patient-hospital encounters, we present methodology for predicting the readmission of diabetic patients based on selected features of the encounters. An existing dataset of encounters from 130 U.S. hospitals was used~\cite{dataset-2014} and pre-processing of this dataset is discussed with respect to problems of class imbalances and missing data. The best performance was obtained using the Support Vector Machines algorithm with a precision value of 61\%.
+Using an existing dataset of patient-hospital encounters, we present methodology for predicting the readmission of diabetic patients based on selected features of the encounters. An existing dataset of encounters from 130 U.S. hospitals was used~\cite{dataset-2014} and pre-processing of this dataset is discussed with respect to problems of class imbalances and missing data. The preprocessed dataset can be found on our \hyperref[github page]{https://github.com/campbelljc/598p4/tree/master/data}. The best performance was obtained using the Support Vector Machines algorithm with a precision value of 61\%. 
 
 \end{abstract}
 
