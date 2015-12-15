@@ -111,7 +111,7 @@ Duplicate encounters of patients were removed from the database to satisfy the I
 % discuss categorization of data
 % smote, over sampling
 
-Medical databases in general are associated with lots of anomalies in recording, and this dataset was no different. There were two problems in particular that were encountered with this data, namely an imbalance in class examples and a large amount of missing data. We present approaches for both of these problems, as well as a brief discussion of feature selection/reduction.
+Medical databases in general are associated with lots of anomalies in recording, and this dataset was no different. There were two problems in particular that were encountered with this data, namely an imbalance in class examples and a large amount of missing data. We present approaches for both of these problems, as well as a brief discussion of feature selection/reduction. Several features are also in inconvenient formats for machine learning algorithms to process, so we discuss our encoding of the data as well.
 
 \subsection{Class Imbalances}
 
@@ -127,6 +127,8 @@ There was a large imbalance of classes in our dataset, leading to a poor accurac
 There are two general ways to solve a class imbalance problem: data-driven approaches and algorithmic approaches~\cite{purwar-2014}. One popular data-based approach using clustering is called SMOTE, which has proven to be very useful for dealing with class imbalance problem~\cite{smote-2012}. Algorithm-based approaches include a modified SVM using decision threshold adaptation~\cite{wu-2003, raskutti-2004} or variation of likelihood estimation in decision trees~\cite{weiss-2003}.
 
 We used the SMOTE algorithm for our dataset. Class 0 examples were oversampled with a ratio of 6.71 using SMOTE technique. Class 1 instances were not oversampled as the number of instances of class 1 compared to class 0 had a ratio of 1.9. Performance of the raw vs. oversampled dataset is presented in the Results section.
+
+Other ideas tried were to sample the same number of instances (6,000) from each class and use that to train the learners, or to merge class 1 and 2. However, neither of these results produced any improvement to precision scores.
 
 \subsection{Missing Data}
 
@@ -150,6 +152,10 @@ Figure~\ref{fig:missing_data} shows the percentage of missing data in various fe
 Feature selection is a technique that reduces the dimension of a dataset's feature space. With high-dimensional data, especially when the dimension of a feature space is as large as or greater than the number of data points in a dataset, learners tend to overfit to training data. Furthermore, it is possible that features are dependent on the values of other features, in which case they add little value to the predictions produced by learning algorithms. Effective use of feature selection techniques can mitigate these problems and improve a learner's generalization performance. 
 
 We used two feature selection techniques with our learners: Principal Component Analysis (PCA) and Analysis of Variance (ANOVA). PCA functions by projecting the vectors in the feature space into eigenspace. In this space, it is easy to determine which components have the largest variance. These components are likely to hold the greatest predictive information, and as such they are labeled the principal components. PCA then removes a parameterized number of features to remove from the feature space and produces a transformed dataset. ANOVA performs similar feature reduction but selects the features that have the highest F-score when compared to the predicted class. For each algorithm, the best choice for number of features to keep can be determined with standard hyper parameter selection techniques. We used grid search for this purpose.
+
+\subsection{Data Encoding}
+
+
 
 \section{Performance Measurement Criteria}
 % f1 score, problems with that...
@@ -177,14 +183,18 @@ Six different baseline classifiers were used: Gaussian Naïve Bayes, Decision Tr
 
 \subsection{Neural Networks}
 
+Artificial neural networks have been used in the literature to predict type 2 diabetes, and were compared with Logistic regression and PCA method [1]. Also real time prediction of glucose was done for diabetic patients using a Neural Network based approach [2 ,3]. 
+
 \subsection{Adaboost}
-Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, 'bootstrapped' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where \[F(x)\] is the classification of the ensemble method and \[a_{i}f_{i}(x)\] is the classification of a weak learner.
+Adaboost is a machine learning ensemble method that can perform exceptionally well with classifying complex datasets. In general, ensemble methods work by training a group of weak learners on a randomly selected, \'bootstrapped\' subset of the training data. The ensemble learner then makes predictions by taking a linear combination of the weak learners' classifications. This type of prediction is shown below, where \[F(x)\] is the classification of the ensemble method and \[a_{i}f_{i}(x)\] is the classification of a weak learner.
 
 \[
 	F(x) = \sum_{i} a_{i}f(x)
 \]
 
 Unlike other ensemble methods, Adaboost bootstraps subsets by weighting the data points based on whether or not they've been correctly classified by other weak learners in the group. This forces the ensemble to learn the qualities of hard-to-classify data. In general this learner has very low bias and variance and tends to generalize well to test data. It has been shown to work well for classifying health care datasets similar to the one at hand~\cite{adaboost-breast-cancer}.
+
+In the literature, sensor data from diabetic patients was used with different ensemble classifiers for pervasive health monitoring of CAN [4]. Different classifiers such as decision trees, support vector machines and boosted algorithms were used for an early detection of Type-2 Diabetes Mellitus in public hospitals [5].
 
 \subsection{Support Vector Machines (SVM)}
 SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching [cite SAS paper]. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The decision boundary is constructed by maximizing the geometric margin between the boundary and the points closest to the boundary. Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
@@ -260,25 +270,22 @@ The confusion matrix for figure~\ref{fig:full_results} is shown in figure~\ref{f
 
 \section{Discussion}
 
+Performance of complex classifiers was better than the baseline classifier because of efficient decision boundary conditions which prevents the overfitting problem as shown in Figure 5. Dataset used herein had class imbalance and missing data problem which was observe to effect the performance of the classifiers. Different methods of handling the missing data and class imbalance problem 
+
 \section{Conclusion}
+
+Dataset utilized for prediction of readmission rates consists of records from 130 U.S hospitals. Target prediction task was to determine the readmission rate of diabetic patients. Missing data and class imbalance problem with the dataset was handled using data substitution, data deletion methods for missing data and oversampling using SMOTE for class imbalance problem. Feature selection method such as PCA and ANOVA was also used for feature reduction and feature selection. Data deletion method was observed to perform better than data substitution method. However, the oversampling of the dataset using SMOT enhanced the performance of some classifiers but performed worst with some of the classifiers. Feature selection was observed to perform even worst and was not utilized for the classifiers herein. Literature with the diabetic databases suggested better performance of neural network, however the same was not observed with this dataset. Neural network performed worse than some of the baseline classifiers for oversampling method but performed good without the oversampling methods for class imbalance problems. Complex classifiers such as SGD and Adaboost was observed to perform better than baseline classifier such as Naïve Bayes, LDA, k-Nearest Neighbour etc. with the exception of Neural Network. 
+
+% 1 Mohamed, Ehab I., et al. "Predicting Type 2 diabetes using an electronic nose-based artificial neural network analysis." Diabetes, nutrition & metabolism 15.4 (2002): 215-221.
+% 2 Pappada, Scott M., et al. "Neural network-based real-time prediction of glucose in patients with insulin-dependent diabetes." Diabetes technology & therapeutics 13.2 (2011): 135-141.
+% 3 Zainuddin, Zarita, Ong Pauline, and Cemal Ardil. "A neural network approach in predicting the blood glucose level for diabetic patients." Int. J. Comput. Intell 5.1 (2009): 72-79.
+% 4 Kelarev, A. V., et al. "Empirical study of decision trees and ensemble classifiers for monitoring of diabetes patients in pervasive healthcare."Network-Based Information Systems (NBiS), 2012 15th International Conference on. IEEE, 2012.
+% 5 Tama, Bayu Adhi, F. S. Rodiyatul, and Hermansyah Hermansyah. "An Early Detection Method of Type-2 Diabetes Mellitus in Public Hospital."TELKOMNIKA (Telecommunication Computing Electronics and Control) 9.2 (2013): 287-294.
+
 
 \section{Future Work}
 
-
-% if have a single appendix:
-%\appendix[Proof of the Zonklar Equations]
-% or
-%\appendix  % for no appendix heading
-% do not use \section anymore after \appendix, only \section*
-% is possibly needed
-
-% use appendices with more than one appendix
-% then use \section to start each appendix
-% you must declare a \section before using any
-% \subsection or using \label (\appendices by itself
-% starts a section numbered zero.)
-%
-
+Precision score for all the classifiers was very low for class 0 compared to other classes due to class imbalance problem. Class imbalance problem with the dataset seems to degrade the performance of classifier very heavily. Oversampling method such as SMOT was utilized to deal with this problem but was not observe to perform so well. Advance methods for class imbalance problem can be utilized in future to improve the performance of the classifiers. Otherwise more data can be collected to achieve higher performance. More advance classifier such as Recurrent Neural Network can be utilized in future to observe the performance. Missing data imputation using model based approach was observed to perform worse than the deletion method of missing data. More detailed study of the missing data including the reason of missing data (MCAR, MAR) can be performed to get insight into the actual reason of missing data and utilizing proper approach for handling those data.
 
 \appendices
 \section{Statement of Contributions}
@@ -286,64 +293,10 @@ This report is a joint contribution of all the team members. Data Imputation and
 
 We hereby state that all work presented in this report is that of the authors.
 
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-%\begin{thebibliography}{1}
-%\end{thebibliography}
-
 \printbibliography
-
-% i still have to turn these refs into bibtex...
-%[2]. Lakshminarayan, Kamakshi, et al. "Imputation of Missing Data Using Machine Learning Techniques." KDD. 1996.
-%[3]. Batista, Gustavo EAPA, and Maria Carolina Monard. "An analysis of four missing data treatment methods for supervised learning." Applied Artificial Intelligence 17.5-6 (2003): 519-533.
-%[4]. Lakshminarayan, Kamakshi, Steven A. Harp, and Tariq Samad. "Imputation of missing data in industrial databases." Applied Intelligence 11.3 (1999): 259-275.
-%[5]. Purwar, Archana, and Sandeep Kumar Singh. "Issues in data mining: A comprehensive survey." Computational Intelligence and Computing Research (ICCIC), 2014 IEEE International Conference on. IEEE, 2014.
-%[6]. N. Abe, “Sampling approaches to learning from imbalanced datasets: active learning, cost sensitive learning and beyond,” ICML-KDD'2003 Workshop: Learning from Imbalanced Data Sets, 2003.
-%[7]. V. López, A. Farnandez, J.M. Torres, and F. Herrera et al,” Analysis of preprocessing vs. cost-sensitive learning for imbalanced classification. Open problems on intrinsic data characteristics”, Expert Systems with Applications, vol 39, pp. 6585–6608, 2012.
-%[8]. G. Wu E. Y. Chang,”Class-Boundary Alignment for Imbalanced Dataset Learning,” ICML-KDD'2003 Workshop: Learning from Imbalanced Data Sets, 2003.
-%[9]. B. Raskutti and A.Kowalcyzk, “Extreme Re-balancing for SVM's: a case study,” ICML-KDD'2003 Workshop: Learning from Imbalanced Data Sets, 2003.
-%[10]. G. M. Weiss and F.Provost ,” Learning when training data are costly: The effect of class distribution on tree induction,” Journal of Artificial Intelligence Research, vol. 19, pp. 315–354. October 2003.
-%[13]. http://www.who.int/diabetes/action_online/basics/en/
-%[18] SAS paper
-
-% biography section
-% 
-% If you have an EPS/PDF photo (graphicx package needed) extra braces are
-% needed around the contents of the optional argument to biography to prevent
-% the LaTeX parser from getting confused when it sees the complicated
-% \includegraphics command within an optional argument. (You could create
-% your own custom macro containing the \includegraphics command to make things
-% simpler here.)
-%\begin{biography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
-% or if you just want to reserve a space for a photo:
 
 \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{picture}}]{John Doe}
 \blindtext
 \end{IEEEbiography}
-
-% You can push biographies down or up by placing
-% a \vfill before or after them. The appropriate
-% use of \vfill depends on what kind of text is
-% on the last page and whether or not the columns
-% are being equalized.
-
-%\vfill
-
-% Can be used to pull up biographies so that the bottom of the last one
-% is flush with the other column.
-%\enlargethispage{-5in}
-
 
 \end{document}
