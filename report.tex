@@ -197,11 +197,12 @@ Six different baseline classifiers mentioned below were implemented for measurin
 \subsection{Neural Networks}
 
 \subsection{Adaboost}
+Adaboost 
 
 \subsection{Support Vector Machines (SVM)}
 SVMs are well known for being very effective learners in the realm of classifying health care data. Munnangi and Chakraborty used an linear SVM to produce the best performance model for the same classification task we were approaching [cite SAS paper]. Like many learners, SVMs construct a decision boundary through a feature space, separating one class of data from another. The decision boundary is constructed by maximizing the geometric margin between the boundary and the points closest to the boundary. Because there is a sense of a best boundary, SVMs have the powerful quality of being able to associate each data point classification with a confidence score. The farther a data point is from the boundary, the more likely it is to belong to the associated class. This is very useful in a multi class setting, where the class of a data point is the most likely class predicted by a set of decision boundaries.
 
-With the given dataset, we explored using SVMs with several types of kernel functions: linear, polynomial, and rbf (radial basis function). Kernel functions are used by SVMs to determine the distance between two points. The proper choice of kernel function can have a significant impact on the performance of the decision boundary. We saw a 10\% accuracy difference between a linear SVM and rbf SVM.
+With the given dataset, we explored using scikit learn's SVM with several types of kernel functions: linear, polynomial, and rbf (radial basis function). Kernel functions are used by SVMs to determine the distance between two points. The proper choice of kernel function can have a significant impact on the performance of the decision boundary. We saw a 10\% accuracy difference between a linear SVM and rbf SVM.
 
 \section{Results}
 
@@ -249,6 +250,15 @@ The combinations of missing data methods and oversampling are presented in figur
 \end{figure}
 
 Precision, recall, and f1-score metrics for the three target classes using a sample learner (Support Vector Machines) with imputation for missing data is shown in figure~\ref{fig:full_results}. Although average values for each metric seem relatively stable (0.53 for precision, 0.60 for recall and 0.48 for f1-score), looking deeper at the breakdown of class values show an imbalance, with class 1 performing much worse than class 2, and class 2 performing much worse than class 3.
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[width=0.5\textwidth]{confmatrix_SGD_PCA}
+	\caption{Confusion matrix of SGD learner with PCA on dataset with deleted missing data.}
+	\label{fig:sgd_pca_results}
+\end{figure}
+
+The best results of applying PCA before SVM classification are shown below~\ref{fig:sgd_pca_results}. We found an optimal performance with keeping the 32 principal components. While the overall f1-score was significantly worse with feature selection, it did improve the precision and recall on class 0 (.41 f1-score for class 0, .35 f1-score for class 1, .46 f1-score for class 2). For each class, SVM predicted the correct class more than any other class. ANOVA produced similar but less successful results and as such the results are not shown here.
 
 \begin{figure}[htpb]
 	\centering
